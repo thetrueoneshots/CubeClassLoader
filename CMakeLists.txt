@@ -1,0 +1,5 @@
+cmake_minimum_required (VERSION 3.8)
+project(project_ClassLoader)
+add_subdirectory(cwmods)
+add_library (ClassLoader SHARED "main.cpp"  "src/class.cpp" "DButton.cpp")
+target_link_libraries (ClassLoader LINK_PUBLIC CWSDK)
