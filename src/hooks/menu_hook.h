@@ -54,31 +54,12 @@ extern "C" char* get_rogue_name() {
 	return (char*)&roguename_0;
 }
 
-extern "C" int get_character_menu_id_increase(int id) {
-	int new_id = GetNextClassId(id);
-	if (new_id <= 3) return new_id;
-	cube::Creature::EntityData* entity_data = &cube::GetGame()->GetPlayer()->entity_data;
-	Class* classInstance = GetClassByGameId(new_id + 1);
-	int itemType = classInstance->itemClass;
-
-	if (itemType != 0) {
-		itemType--;
-	}
-
-	std::pair<int, int> item = starter_items->at(itemType)->at(0);
-
-	// Player is not accesible yet.
-	entity_data->equipment.weapon_right.category = item.first;
-	entity_data->equipment.weapon_right.id = item.second;
-	entity_data->equipment.weapon_right.region = entity_data->region;
-	entity_data->equipment.weapon_right.rarity = 0;
-	entity_data->equipment.weapon_right.modifier = new_id*999 + 555 % new_id;
-
-	return new_id;
+extern "C" void get_character_menu_id_increase(cube::CharacterStyleWidget* widget) {
+	widget->class_type = GetNextClassId(widget->class_type);
 }
 
-extern "C" int get_character_menu_id_decrease(int id) {
-	return GetPreviousClassId(id);
+extern "C" void get_character_menu_id_decrease(cube::CharacterStyleWidget * widget) {
+	widget->class_type = GetPreviousClassId(widget->class_type);
 }
 
 void ASMSetMenuClassName() asm_naked {
@@ -144,11 +125,10 @@ void ASMSetClassName_2() asm_naked {
 void ASMMenuClassIdIncrease() asm_naked {
 	asm(".intel_syntax \n"
 		PUSH_ALL
-		"mov rcx, [rbx + 0x244] \n"
+		"mov rcx, rbx \n"
 		PREPARE_STACK
 		"call get_character_menu_id_increase \n"
 		RESTORE_STACK
-		"mov [rbx + 0x244], eax \n"
 		POP_ALL
 		// Old code
 		"xor edx, edx \n"
@@ -161,11 +141,10 @@ void ASMMenuClassIdIncrease() asm_naked {
 void ASMMenuClassIdDecrease() asm_naked {
 	asm(".intel_syntax \n"
 		PUSH_ALL
-		"mov rcx, [rbx + 0x244] \n"
+		"mov rcx, rbx \n"
 		PREPARE_STACK
 		"call get_character_menu_id_decrease \n"
 		RESTORE_STACK
-		"mov [rbx + 0x244], eax \n"
 		POP_ALL
 		// Old code
 		"xor edx, edx \n"
