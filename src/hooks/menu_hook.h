@@ -67,11 +67,14 @@ extern "C" char generate_random_creature_info(cube::Game* game) {
 	int classType = player->entity_data.classType;
 	if (classType > 4) {
 		Class* classInstance = GetClassByGameId(classType);
-		if (classInstance->itemClass == 0) {
-			player->entity_data.classType = 1;
-		}
-		else {
-			player->entity_data.classType = classInstance->itemClass;
+		if (classInstance != nullptr) {
+			int newClassType = classInstance->itemClass;
+			if (newClassType == 0) {
+				player->entity_data.classType = 1;
+			}
+			else {
+				player->entity_data.classType = newClassType;
+			}
 		}
 	}
 	char ret = ((char (*)(cube::Game*))CWOffset(0x913B0))(game);
