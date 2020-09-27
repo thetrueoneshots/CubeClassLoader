@@ -5,12 +5,30 @@ ClassWindow::ClassWindow(std::vector<Class*>* vector)
 	classVector = vector;
 }
 
-// Todo: Implement
 void ClassWindow::SelectClass(Class* classInstance) {
 	selectedClass = classInstance;
 	sprintf_s(className, 16, selectedClass->name->c_str());
 	sprintf_s(specName1, 50, selectedClass->specializations[0]->name->c_str());
 	sprintf_s(specName2, 50, selectedClass->specializations[1]->name->c_str());
+}
+
+void ClassWindow::Update() {
+	// Update Class*
+	selectedClass->name->replace(0, strlen(className) + 1, className);
+	selectedClass->specializations[0]->name->replace(0, strlen(specName1) + 1, specName1);
+	selectedClass->specializations[1]->name->replace(0, strlen(specName2) + 1, specName2);
+
+	// Update speech map
+	std::pair<uint32_t, uint32_t> def(4 + selectedClass->id, 0);
+
+	std::string* spec = selectedClass->specializations[0]->name;
+	std::wstring specName(spec->begin(), spec->end());
+	game->speech.specialization_type_id_map.insert_or_assign(def, specName);
+	
+	def.second = 1;
+	spec = selectedClass->specializations[1]->name;
+	specName = std::wstring(spec->begin(), spec->end());
+	game->speech.specialization_type_id_map.insert_or_assign(def, specName);
 }
 
 void ClassWindow::Present()
@@ -65,20 +83,16 @@ void ClassWindow::Present()
 	ImGui::SetNextWindowPos(ImVec2(game->width - (width + 20), 20), ImGuiCond_Once);
 
 	// Todo: Implement saving of all classes to files.
-	// Todo: Fix add class unique id
-	// Todo: Fix class specialization updating
-	//ImGui::Begin("Class Creator Window", &windowActive, size, -1.0, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_MenuBar);
 	ImGui::Begin("Custom Class Window", nullptr, size, -1.0, ImGuiWindowFlags_MenuBar);
 	if (ImGui::BeginMenuBar())
 	{
 		if (ImGui::BeginMenu("Options"))
 		{
 			if (ImGui::MenuItem("Add Class", "Creates a new custom class")) { 
-				/* Do stuff */ 
 				Class* classInstance = new Class();
 				if (classInstance != nullptr) {
 					SelectClass(classInstance);
-					classInstance->id = 2;
+					classInstance->id = GetUniqueClassId(*classVector);
 					classVector->push_back(classInstance);
 				}
 				else {
@@ -122,11 +136,7 @@ void ClassWindow::Present()
 		ImGui::InputInt("Spec 2 CDR (in ms)", &selectedClass->specializations[1]->cooldown, 100, 1000);
 		ImGui::InputInt("Spec 2 Shift", &selectedClass->specializations[1]->shiftAbility, 1, 1);
 
-		// Todo: Fix string length of update. (Sometimes showing info that is not there)
-		// Update class instance
-		selectedClass->name->replace(0, min(strlen(className), 16), className);
-		selectedClass->specializations[0]->name->replace(0, min(strlen(specName1), 50), specName1);
-		selectedClass->specializations[0]->name->replace(0, min(strlen(specName2), 50), specName2);
+		Update();
 	}
 	
 	ImGui::Separator();
@@ -144,12 +154,6 @@ void ClassWindow::Present()
 		std::string label = "Edit " + name + "(id: " + std::to_string(classVector->at(i)->id) + ")" ;
 		if (ImGui::Button(label.c_str())) {
 			SelectClass(classVector->at(i));
-			/*
-			selectedClass = classVector->at(i);
-			sprintf_s(className, 16, selectedClass->name->c_str());
-			sprintf_s(specName1, 50, selectedClass->specializations[0]->name->c_str());
-			sprintf_s(specName2, 50, selectedClass->specializations[1]->name->c_str());
-			*/
 		}
 		ImGui::Separator();
 	}
@@ -172,8 +176,6 @@ void ClassWindow::Present()
 	game->gui.cursor_node->Draw(0);
 
 	*trans = oldTrans;
-
-
 }
 
 bool ClassWindow::Initialize()

@@ -51,3 +51,25 @@ public:
 
 	std::string ToString();
 };
+
+/* Gets a new unique id, not assigned to a class yet.
+ * Returns -1 if no id is found.
+ * @param {std::vector<Class*>} classVector All the already existing custom classes.
+ * @return {int}
+ */
+static int GetUniqueClassId(std::vector<Class*> classVector) {
+	int id = -1;
+	for (int i = 1; i <= 28; i++) {
+		bool found = false;
+		for (Class* classInstance : classVector) {
+			if (classInstance->id != i) continue;
+			found = true;
+		}
+
+		if (found) continue;
+
+		id = i;
+		break;
+	}
+	return id;
+}

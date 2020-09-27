@@ -116,37 +116,22 @@ class Mod : GenericMod {
 			for (auto i = 0; i < classVector.size(); i++) {
 				for (auto j = 0; j < classVector.at(i)->specializations.size(); j++) {
 					std::pair<uint32_t, uint32_t> def;
-					def.first = 5 + i;
+					def.first = 4 + classVector.at(i)->id;
 					def.second = j;
 					std::string* spec = classVector.at(i)->specializations.at(j)->name;
 					std::wstring specName(spec->begin(), spec->end());
 					game->speech.specialization_type_id_map.insert_or_assign(def, specName);
-					
-					/* Todo: Maybe put back after testing.
-					int rAbility = classVector.at(i)->specializations.at(j)->rAbility;
-					if (!game->speech.skill_type_id_map.count(rAbility)) {
-						game->speech.skill_type_id_map.insert_or_assign(rAbility, std::wstring(L"huh"));
-					}
-					*/
 				}
 			}
 
 			// Initialize ability names.
-			// Todo: Maybe remove after testing.
 			for (auto i = 1; i <= 255; i++) {
 				if (!game->speech.skill_type_id_map.count(i)) {
 					game->speech.skill_type_id_map.insert_or_assign(i, std::wstring(L"SkillAttack"));
 				}
 			}
-			game->speech.skill_type_id_map.insert_or_assign(165, std::wstring(L"SkillBulwark"));
 		}
 
-		/*
-		Issues: 
-		- Crafting gear shows wrong type of item (wood or gold instead of linnen or cotton)
-		- Crafting cotton yarn crashes (mage)
-		- Crafting silk isnt tested yet
-		*/
 		if (InCraftingGUI(game)) {
 			std::vector<cube::ItemStack>* itemStacks = &game->crafting_menu_tabs.at(5);
 			int classType = game->GetPlayer()->entity_data.classType;
@@ -202,7 +187,7 @@ class Mod : GenericMod {
 					continue;
 				}
 
-				Popup("Debug", classInstance->ToString().c_str());
+				//Popup("Debug", classInstance->ToString().c_str());
 				classVector.push_back(classInstance);
 			} while (FindNextFile(hFind, &data));
 			FindClose(hFind);
@@ -220,7 +205,7 @@ class Mod : GenericMod {
 
 		classWindow = new ClassWindow(&classVector);
 
-		PrintLoadedClasses();
+		//PrintLoadedClasses();
 		return;
 	}
 
@@ -243,17 +228,6 @@ class Mod : GenericMod {
 				player->entity_data.current_ability = classInstance->specializations[specType]->shiftAbility;
 			}
 		}
-
-		// Todo: Fix cooldown (probably insert it in a hook :/ ) 
-		/*
-		if (rKey.Pressed()) {
-			Class* classInstance = GetClassByGameId(classType);
-			if (classInstance != nullptr) {
-				if (classInstance->specializations[specType]->rAbility == 165) {
-					player->entity_data.HP = player->GetMaxHP();
-				}
-			}
-		}*/
 		return;
 	}
 

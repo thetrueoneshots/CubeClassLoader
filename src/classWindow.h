@@ -7,6 +7,7 @@
 //#include "public.h"
 
 class ClassWindow {
+	// Todo: Rewrite these to flags
 	bool initialized = false;
 	bool wantMouse = false;
 	bool wantKeyboard = false;
@@ -31,6 +32,7 @@ class ClassWindow {
 
 	cube::Game* game;
 	void SelectClass(Class* classInstance);
+	void Update();
 public:
 	ClassWindow(std::vector<Class*>* vector);
 	void Present();
