@@ -17,6 +17,9 @@ public:
 
 		Specialization() {
 			name = new std::string();
+			rAbility = 100;
+			cooldown = 5000;
+			shiftAbility = 100;
 		}
 
 		~Specialization() {
@@ -32,6 +35,8 @@ public:
 	std::vector<Specialization*> specializations;
 
 	Class() {
+		id = 0;
+		itemClass = 1;
 		name = new std::string();
 		specializations.push_back(new Specialization());
 		specializations.push_back(new Specialization());

@@ -14,15 +14,17 @@
 #include "cwmods/cwsdk.h"
 // Include src
 #include "DButton.h"
-#include "src/class.h"
-#include "src/fileParser.h"
 #include "src/public.h"
+#include "src/class.h"
+#include "src/classWindow.h"
+#include "src/fileParser.h"
 #include "src/memory/memory_helper.h"
 // Include hooks
 #include "src/hooks/menu_hook.h"
 #include "src/hooks/item_restrictions_hook.h"
 #include "src/hooks/abilities_hook.h"
-
+#include "src/hooks/crafting_hook.h"
+#include "src/hooks/treasure_fix.h"
 
 #define MUST_IMPORT(dllname, name)\
 dllname->name = GetProcAddress(dllname->handle, #name);\

@@ -53,10 +53,19 @@ bool InGUI(cube::Game* game) {
 	return false;
 }
 
+bool InCraftingGUI(cube::Game* game) {
+	cube::GUI* gui = &game->gui;
+	auto data = &gui->crafting_inventory_widget->node->display->visibility.data;
+	auto frame = gui->crafting_inventory_widget->node->display->visibility.current_frame;
+	return data->at(frame) ? true : false;
+}
+
 
 /* Mod class containing all the functions for the mod.
 */
 class Mod : GenericMod {
+
+	ClassWindow* classWindow;
 	/* Hook for the chat function. Triggers when a user sends something in the chat.
 	 * @param	{std::wstring*} message
 	 * @return	{int}
@@ -129,7 +138,33 @@ class Mod : GenericMod {
 					game->speech.skill_type_id_map.insert_or_assign(i, std::wstring(L"SkillAttack"));
 				}
 			}
+			game->speech.skill_type_id_map.insert_or_assign(165, std::wstring(L"SkillBulwark"));
 		}
+
+		/*
+		Issues: 
+		- Crafting gear shows wrong type of item (wood or gold instead of linnen or cotton)
+		- Crafting cotton yarn crashes (mage)
+		- Crafting silk isnt tested yet
+		*/
+		if (InCraftingGUI(game)) {
+			std::vector<cube::ItemStack>* itemStacks = &game->crafting_menu_tabs.at(5);
+			int classType = game->GetPlayer()->entity_data.classType;
+			if (itemStacks->size() <= 6 && classType >= 4) {
+				Class* classInstance = GetClassByGameId(classType);
+				if (classInstance->itemClass != 1) {
+					for (int i = 0; i < 3; i++) {
+						cube::Item item = cube::Item(11, 9);
+						item.material = 26 + i;
+						item.rarity = 0;
+						item.formula_category = 0;
+						cube::ItemStack itemStack = cube::ItemStack(0, item);
+						itemStacks->push_back(itemStack);
+					}
+				}
+			}
+		}
+
 		return;
 	}
 
@@ -140,19 +175,6 @@ class Mod : GenericMod {
 	void Initialize() {
 
 		cooldownMap = new std::vector<int>(256, 0);
-		starter_items = new std::vector<std::vector<std::pair<int, int>>*>;
-		starter_items->push_back(new std::vector<std::pair<int, int>>);
-		starter_items->at(0)->push_back(std::make_pair<int, int>(3, 0));
-
-		starter_items->push_back(new std::vector<std::pair<int, int>>);
-		starter_items->at(1)->push_back(std::make_pair<int, int>(3, 8));
-
-		starter_items->push_back(new std::vector<std::pair<int, int>>);
-		starter_items->at(2)->push_back(std::make_pair<int, int>(3, 10));
-
-		starter_items->push_back(new std::vector<std::pair<int, int>>);
-		starter_items->at(3)->push_back(std::make_pair<int, int>(3, 5));
-
 
 		HANDLE hFind;
 		WIN32_FIND_DATA data;
@@ -186,21 +208,28 @@ class Mod : GenericMod {
 			FindClose(hFind);
 		}
 
+
 		// Initialise class loader hooks.
 		InitializeMenuHook();
 		InitializeItemRestrictionsHook();
 		InitializeAbilityHook();
+		InitializeCraftingHook();
+		InitializeTreasureHook();
 		// Initialise hooks of all class dll's
 		SetupCooldowns();
 
+		classWindow = new ClassWindow(&classVector);
 
 		PrintLoadedClasses();
 		return;
 	}
 
 	void OnGetKeyboardState(BYTE* diKeys) {
+		classWindow->OnGetKeyboardState(diKeys);
 		static DButton lShiftKey(42);
+		static DButton rKey(19);
 		lShiftKey.Update(diKeys);
+		rKey.Update(diKeys);
 		cube::Game* game = cube::GetGame();
 		cube::Creature* player = game->GetPlayer();
 		auto classType = player->entity_data.classType;
@@ -208,10 +237,38 @@ class Mod : GenericMod {
 		if (classType <= 4 || InGUI(game)) return;
 		
 		if (lShiftKey.Pressed()) {
-			player->entity_data.time_since_ability = 0.0;
-			player->entity_data.current_ability = classVector[classType - 5]->specializations[specType]->shiftAbility;
+			Class* classInstance = GetClassByGameId(classType);
+			if (classInstance != nullptr) {
+				player->entity_data.time_since_ability = 0.0;
+				player->entity_data.current_ability = classInstance->specializations[specType]->shiftAbility;
+			}
 		}
+
+		// Todo: Fix cooldown (probably insert it in a hook :/ ) 
+		/*
+		if (rKey.Pressed()) {
+			Class* classInstance = GetClassByGameId(classType);
+			if (classInstance != nullptr) {
+				if (classInstance->specializations[specType]->rAbility == 165) {
+					player->entity_data.HP = player->GetMaxHP();
+				}
+			}
+		}*/
 		return;
+	}
+
+	void OnGetMouseState(DIMOUSESTATE* diMouse) {
+		classWindow->OnGetMouseState(diMouse);
+	}
+
+
+	void OnPresent(IDXGISwapChain* SwapChain, UINT SyncInterval, UINT Flags) {
+		classWindow->Present();
+	}
+
+
+	int OnWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+		return classWindow->WindowProc(hwnd, uMsg, wParam, lParam);
 	}
 };
 

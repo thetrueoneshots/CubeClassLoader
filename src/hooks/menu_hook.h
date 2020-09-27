@@ -55,14 +55,17 @@ extern "C" char* get_rogue_name() {
 }
 
 extern "C" void get_character_menu_id_increase(cube::CharacterStyleWidget* widget) {
+	//Popup("Debug", "Increase");
 	widget->class_type = GetNextClassId(widget->class_type);
 }
 
 extern "C" void get_character_menu_id_decrease(cube::CharacterStyleWidget * widget) {
+	//Popup("Debug", "Decrease");
 	widget->class_type = GetPreviousClassId(widget->class_type);
 }
 
 extern "C" char generate_random_creature_info(cube::Game* game) {
+	//Popup("Debug", "Generate");
 	cube::Creature* player = game->GetPlayer();
 	int classType = player->entity_data.classType;
 	if (classType > 4) {

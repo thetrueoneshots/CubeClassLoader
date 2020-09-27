@@ -1,5 +1,7 @@
 cmake_minimum_required (VERSION 3.8)
 project(project_ClassLoader)
 add_subdirectory(cwmods)
-add_library (ClassLoader SHARED "main.cpp"  "src/class.cpp" "DButton.cpp")
+add_subdirectory(imgui-1.73)
+add_library (ClassLoader SHARED "main.cpp"  "src/class.cpp" "DButton.cpp" "src/classWindow.cpp")
 target_link_libraries (ClassLoader LINK_PUBLIC CWSDK)
+target_link_libraries (ClassLoader LINK_PUBLIC IMGUI)

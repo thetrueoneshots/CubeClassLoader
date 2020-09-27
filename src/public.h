@@ -1,5 +1,4 @@
 #pragma once
-
 #include <vector>
 #include <string>
 #include <map>
@@ -7,7 +6,6 @@
 
 std::vector<Class*> classVector;
 std::vector<int>* cooldownMap;
-std::vector<std::vector<std::pair<int, int>>*>* starter_items;
 
 void Popup(const char* title, const char* msg) {
 	MessageBoxA(0, msg, title, MB_OK | MB_ICONINFORMATION);
@@ -22,7 +20,7 @@ void SetCooldown(std::vector<int> ids, int cooldown) {
 // Todo: Look at 108 and 50.
 void SetupCooldowns() {
 	SetCooldown(std::vector<int>({ 51, 55, 115 }), 16000);
-	SetCooldown(std::vector<int>({ 47, 109, 112, 113, 114, 142, 144, 146 }), 40000);
+	SetCooldown(std::vector<int>({ 47, 109, 112, 113, 114, 142, 144, 146, 165 }), 40000);
 	SetCooldown(std::vector<int>({ 95, 98, 136, 149 }), 30000);
 	SetCooldown(std::vector<int>({ 22, 52, 97 }), 12000);
 	SetCooldown(std::vector<int>({ 111 }), 4000);
