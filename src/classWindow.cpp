@@ -1,4 +1,7 @@
 #include "classWindow.h"
+#include <fstream>
+#include <iostream>
+#include <windows.h>
 
 ClassWindow::ClassWindow(std::vector<Class*>* vector)
 {
@@ -29,6 +32,29 @@ void ClassWindow::Update() {
 	spec = selectedClass->specializations[1]->name;
 	specName = std::wstring(spec->begin(), spec->end());
 	game->speech.specialization_type_id_map.insert_or_assign(def, specName);
+}
+
+void ClassWindow::SaveClasses() {
+	char fileName[256] = { 0 };
+	const char* folderName = "Mods\\Classes";
+
+	CreateDirectory(folderName, NULL);
+
+	//File for this Zone
+	sprintf(fileName, "%s\\save.cwb", folderName);
+	std::ofstream file;
+	file.open(fileName, std::ios::out | std::ios::binary);
+
+	//Write each block to file
+	for (Class* classInstance : *classVector) {
+		file.write((char*)classInstance, sizeof(*classInstance));
+		file.write((char*)classInstance->name, sizeof(*classInstance->name));
+		file.write((char*)classInstance->specializations[0], sizeof(*classInstance->specializations[0]));
+		file.write((char*)classInstance->specializations[0]->name, sizeof(*classInstance->specializations[0]->name));
+		file.write((char*)classInstance->specializations[1], sizeof(*classInstance->specializations[1]));
+		file.write((char*)classInstance->specializations[1]->name, sizeof(*classInstance->specializations[1]->name));
+	}
+	file.close();
 }
 
 void ClassWindow::Present()
@@ -101,6 +127,7 @@ void ClassWindow::Present()
 			}
 			if (ImGui::MenuItem("Save Classes", "Saves all custom classes")) { 
 				/* Do stuff */ 
+				SaveClasses();
 				game->PrintMessage(L"Saving a class is not yet implemented... \n");
 			}
 			ImGui::EndMenu();
@@ -147,17 +174,23 @@ void ClassWindow::Present()
 	ImGui::Separator();
 	ImGui::Separator();
 
-	ImGui::BeginChild("Scrolling", ImVec2(300, 100), false, 0);
+	//ImGui::BeginChild("Scrolling", ImVec2(300, 100), false, 0);
 	for (int i = 0; i < classVector->size(); i++) {
 		std::string name = *classVector->at(i)->name;
 		ImGui::Text("Class: %s", name.c_str());
-		std::string label = "Edit " + name + "(id: " + std::to_string(classVector->at(i)->id) + ")" ;
-		if (ImGui::Button(label.c_str())) {
+		std::string nameLbl = name + "(id: " + std::to_string(classVector->at(i)->id) + ")";
+		std::string labelEdit = "Edit " + nameLbl;
+		std::string labelDelete = "Delete " + nameLbl;
+		if (ImGui::Button(labelEdit.c_str())) {
 			SelectClass(classVector->at(i));
 		}
+		if (ImGui::Button(labelDelete.c_str())) {
+			classVector->erase(classVector->begin() + i);
+		}
+
 		ImGui::Separator();
 	}
-	ImGui::EndChild();
+	//ImGui::EndChild();
 
 	ImGui::Separator();
 

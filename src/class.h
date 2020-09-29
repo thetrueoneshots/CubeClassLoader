@@ -22,6 +22,13 @@ public:
 			shiftAbility = 100;
 		}
 
+		Specialization(Specialization* temp, std::string* tempName) {
+			name = new std::string(tempName->begin(), tempName->end());
+			rAbility = temp->rAbility;
+			cooldown = temp->cooldown;
+			shiftAbility = temp->shiftAbility;
+		}
+
 		~Specialization() {
 			delete name;
 		}
@@ -38,6 +45,15 @@ public:
 		id = 0;
 		itemClass = 1;
 		name = new std::string();
+		specializations.push_back(new Specialization());
+		specializations.push_back(new Specialization());
+	}
+
+	// Todo: Rewrite cleanly
+	Class(Class* temp, std::string* tempName) {
+		id = temp->id;
+		itemClass = temp->itemClass;
+		name = new std::string(tempName->begin(), tempName->end());
 		specializations.push_back(new Specialization());
 		specializations.push_back(new Specialization());
 	}

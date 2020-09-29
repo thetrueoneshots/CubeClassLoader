@@ -33,6 +33,7 @@ class ClassWindow {
 	cube::Game* game;
 	void SelectClass(Class* classInstance);
 	void Update();
+	void SaveClasses();
 public:
 	ClassWindow(std::vector<Class*>* vector);
 	void Present();

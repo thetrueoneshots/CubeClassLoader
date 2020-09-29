@@ -17,6 +17,49 @@ void SetCooldown(std::vector<int> ids, int cooldown) {
 	}
 }
 
+void LoadClasses() {
+	char* blocks;
+	std::streampos fsize;
+
+	char fileName[256] = { 0 };
+	const char* folderName = "Mods\\Classes";
+
+	CreateDirectory(folderName, NULL);
+	sprintf(fileName, "%s\\save.cwb", folderName);
+	std::ifstream file(fileName, std::ios::in | std::ios::binary | std::ios::ate);
+	if (file.is_open()) {
+		//File exists, read it
+		fsize = file.tellg();
+		blocks = new char[fsize];
+		file.seekg(0, std::ios::beg);
+		file.read(blocks, fsize);
+		file.close();
+
+		int stepSize = sizeof(Class) + 2 * sizeof(Class::Specialization) + 3 * sizeof(std::string);
+		for (int i = 0; i < fsize; i += stepSize) {
+			int j = i;
+			Class* temp = (Class*)&blocks[j];
+			j += sizeof(Class);
+			std::string* name = (std::string*)&blocks[j];
+			j += sizeof(*name);
+			Class::Specialization* spec1 = (Class::Specialization*)&blocks[j];
+			j += sizeof(Class::Specialization);
+			std::string* spec1Name = (std::string*)&blocks[j];
+			j += sizeof(*spec1Name);
+			Class::Specialization* spec2 = (Class::Specialization*)&blocks[j];
+			j += sizeof(Class::Specialization);
+			std::string* spec2Name = (std::string*)&blocks[j];
+			j += sizeof(*spec2Name);
+			Class* classInstance = new Class(temp, name);
+			classInstance->specializations[0] = new Class::Specialization(spec1, spec1Name);
+			classInstance->specializations[1] = new Class::Specialization(spec2, spec2Name);
+			classVector.push_back(classInstance);
+		}
+
+		delete[] blocks;
+	}
+}
+
 // Todo: Look at 108 and 50.
 void SetupCooldowns() {
 	SetCooldown(std::vector<int>({ 51, 55, 115 }), 16000);
