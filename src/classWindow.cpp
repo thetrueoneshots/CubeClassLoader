@@ -34,6 +34,8 @@ void ClassWindow::Update() {
 	game->speech.specialization_type_id_map.insert_or_assign(def, specName);
 }
 
+// Todo: Strings bigger than 15 are stored on the heap in std::string, not allowing it to write to file correctly.
+// Fix this by writing a c_str() to the file. [Note: Don't forget the ending 0 character]
 void ClassWindow::SaveClasses() {
 	char fileName[256] = { 0 };
 	const char* folderName = "Mods\\Classes";
@@ -128,7 +130,7 @@ void ClassWindow::Present()
 			if (ImGui::MenuItem("Save Classes", "Saves all custom classes")) { 
 				/* Do stuff */ 
 				SaveClasses();
-				game->PrintMessage(L"Saving a class is not yet implemented... \n");
+				game->PrintMessage(L"Saved classes. \n");
 			}
 			ImGui::EndMenu();
 		}
@@ -174,7 +176,7 @@ void ClassWindow::Present()
 	ImGui::Separator();
 	ImGui::Separator();
 
-	//ImGui::BeginChild("Scrolling", ImVec2(300, 100), false, 0);
+	ImGui::BeginChild("Scrolling", ImVec2(300, 100), false, 0);
 	for (int i = 0; i < classVector->size(); i++) {
 		std::string name = *classVector->at(i)->name;
 		ImGui::Text("Class: %s", name.c_str());
@@ -190,7 +192,7 @@ void ClassWindow::Present()
 
 		ImGui::Separator();
 	}
-	//ImGui::EndChild();
+	ImGui::EndChild();
 
 	ImGui::Separator();
 

@@ -17,6 +17,8 @@ void SetCooldown(std::vector<int> ids, int cooldown) {
 	}
 }
 
+// Todo: Read the strings as char* and create std::strings out of that.
+// [Note: j should probably increase with strlen(char*)]
 void LoadClasses() {
 	char* blocks;
 	std::streampos fsize;
