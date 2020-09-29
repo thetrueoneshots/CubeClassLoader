@@ -34,8 +34,6 @@ void ClassWindow::Update() {
 	game->speech.specialization_type_id_map.insert_or_assign(def, specName);
 }
 
-// Todo: Strings bigger than 15 are stored on the heap in std::string, not allowing it to write to file correctly.
-// Fix this by writing a c_str() to the file. [Note: Don't forget the ending 0 character]
 void ClassWindow::SaveClasses() {
 	char fileName[256] = { 0 };
 	const char* folderName = "Mods\\Classes";
@@ -47,14 +45,18 @@ void ClassWindow::SaveClasses() {
 	std::ofstream file;
 	file.open(fileName, std::ios::out | std::ios::binary);
 
+	
 	//Write each block to file
 	for (Class* classInstance : *classVector) {
+		const char* name = classInstance->name->c_str();
+		const char* spec1Name = classInstance->specializations[0]->name->c_str();
+		const char* spec2Name = classInstance->specializations[1]->name->c_str();
 		file.write((char*)classInstance, sizeof(*classInstance));
-		file.write((char*)classInstance->name, sizeof(*classInstance->name));
+		file.write((char*)name, strlen(name) + 1);
 		file.write((char*)classInstance->specializations[0], sizeof(*classInstance->specializations[0]));
-		file.write((char*)classInstance->specializations[0]->name, sizeof(*classInstance->specializations[0]->name));
+		file.write((char*)spec1Name, strlen(spec1Name) + 1);
 		file.write((char*)classInstance->specializations[1], sizeof(*classInstance->specializations[1]));
-		file.write((char*)classInstance->specializations[1]->name, sizeof(*classInstance->specializations[1]->name));
+		file.write((char*)spec2Name, strlen(spec2Name) + 1);
 	}
 	file.close();
 }
@@ -110,7 +112,6 @@ void ClassWindow::Present()
 	ImGui::SetNextWindowSize(size);
 	ImGui::SetNextWindowPos(ImVec2(game->width - (width + 20), 20), ImGuiCond_Once);
 
-	// Todo: Implement saving of all classes to files.
 	ImGui::Begin("Custom Class Window", nullptr, size, -1.0, ImGuiWindowFlags_MenuBar);
 	if (ImGui::BeginMenuBar())
 	{
@@ -127,10 +128,9 @@ void ClassWindow::Present()
 					game->PrintMessage(L"Error adding a new class\n", 255, 0, 0);
 				}
 			}
-			if (ImGui::MenuItem("Save Classes", "Saves all custom classes")) { 
-				/* Do stuff */ 
+			if (ImGui::MenuItem("Save Classes", "Saves all custom classes")) {
 				SaveClasses();
-				game->PrintMessage(L"Saved classes. \n");
+				game->PrintMessage(L"Saved all custom classes. \n", 0, 255, 0);
 			}
 			ImGui::EndMenu();
 		}
@@ -176,7 +176,6 @@ void ClassWindow::Present()
 	ImGui::Separator();
 	ImGui::Separator();
 
-	ImGui::BeginChild("Scrolling", ImVec2(300, 100), false, 0);
 	for (int i = 0; i < classVector->size(); i++) {
 		std::string name = *classVector->at(i)->name;
 		ImGui::Text("Class: %s", name.c_str());
@@ -186,13 +185,17 @@ void ClassWindow::Present()
 		if (ImGui::Button(labelEdit.c_str())) {
 			SelectClass(classVector->at(i));
 		}
+		ImGui::SameLine(10 * labelEdit.size() - 10);
 		if (ImGui::Button(labelDelete.c_str())) {
+			if (selectedClass == classVector->at(i)) {
+				selectedClass = nullptr;
+			}
+			delete classVector->at(i);
 			classVector->erase(classVector->begin() + i);
 		}
 
 		ImGui::Separator();
 	}
-	ImGui::EndChild();
 
 	ImGui::Separator();
 

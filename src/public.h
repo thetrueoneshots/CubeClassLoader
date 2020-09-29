@@ -17,8 +17,9 @@ void SetCooldown(std::vector<int> ids, int cooldown) {
 	}
 }
 
-// Todo: Read the strings as char* and create std::strings out of that.
-// [Note: j should probably increase with strlen(char*)]
+/* Loads all the classes from the save file.
+ * @return {void}
+*/
 void LoadClasses() {
 	char* blocks;
 	std::streampos fsize;
@@ -37,24 +38,23 @@ void LoadClasses() {
 		file.read(blocks, fsize);
 		file.close();
 
-		int stepSize = sizeof(Class) + 2 * sizeof(Class::Specialization) + 3 * sizeof(std::string);
-		for (int i = 0; i < fsize; i += stepSize) {
-			int j = i;
-			Class* temp = (Class*)&blocks[j];
-			j += sizeof(Class);
-			std::string* name = (std::string*)&blocks[j];
-			j += sizeof(*name);
-			Class::Specialization* spec1 = (Class::Specialization*)&blocks[j];
-			j += sizeof(Class::Specialization);
-			std::string* spec1Name = (std::string*)&blocks[j];
-			j += sizeof(*spec1Name);
-			Class::Specialization* spec2 = (Class::Specialization*)&blocks[j];
-			j += sizeof(Class::Specialization);
-			std::string* spec2Name = (std::string*)&blocks[j];
-			j += sizeof(*spec2Name);
-			Class* classInstance = new Class(temp, name);
-			classInstance->specializations[0] = new Class::Specialization(spec1, spec1Name);
-			classInstance->specializations[1] = new Class::Specialization(spec2, spec2Name);
+		int i = 0;
+		while (i < fsize) {
+			Class* temp = (Class*)&blocks[i];
+			i += sizeof(Class);
+			char* name = (char*)&blocks[i];
+			i += strlen(name) + 1;
+			Class::Specialization* spec1 = (Class::Specialization*)&blocks[i];
+			i += sizeof(Class::Specialization);
+			char* spec1Name = (char*)&blocks[i];
+			i += strlen(spec1Name) + 1;
+			Class::Specialization* spec2 = (Class::Specialization*)&blocks[i];
+			i += sizeof(Class::Specialization);
+			char* spec2Name = (char*)&blocks[i];
+			i += strlen(spec2Name) + 1;
+			Class* classInstance = new Class(temp, new std::string(name));
+			classInstance->specializations[0] = new Class::Specialization(spec1, new std::string(spec1Name));
+			classInstance->specializations[1] = new Class::Specialization(spec2, new std::string(spec2Name));
 			classVector.push_back(classInstance);
 		}
 
@@ -62,7 +62,6 @@ void LoadClasses() {
 	}
 }
 
-// Todo: Look at 108 and 50.
 void SetupCooldowns() {
 	SetCooldown(std::vector<int>({ 51, 55, 115 }), 16000);
 	SetCooldown(std::vector<int>({ 47, 109, 112, 113, 114, 142, 144, 146, 165 }), 40000);

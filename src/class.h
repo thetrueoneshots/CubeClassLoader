@@ -22,6 +22,7 @@ public:
 			shiftAbility = 100;
 		}
 
+		// Todo: Rewrite to receive char*
 		Specialization(Specialization* temp, std::string* tempName) {
 			name = new std::string(tempName->begin(), tempName->end());
 			rAbility = temp->rAbility;
@@ -49,7 +50,7 @@ public:
 		specializations.push_back(new Specialization());
 	}
 
-	// Todo: Rewrite cleanly
+	// Todo: Rewrite to receive char*
 	Class(Class* temp, std::string* tempName) {
 		id = temp->id;
 		itemClass = temp->itemClass;

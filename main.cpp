@@ -158,42 +158,11 @@ class Mod : GenericMod {
 	 * @return	{void}
 	*/
 	void Initialize() {
-
+		//Setup cooldowns
 		cooldownMap = new std::vector<int>(256, 0);
+		SetupCooldowns();
 
-		/*
-		HANDLE hFind;
-		WIN32_FIND_DATA data;
-
-		// Creating the mods\classes folder if not already existing
-		CreateDirectory("mods\\classes", NULL);
-
-		// Finding and loading all the dll's in the mods\classes folder
-		hFind = FindFirstFile("mods\\classes\\*.txt", &data);
-		if (hFind != INVALID_HANDLE_VALUE) {
-			do {
-				Class* classInstance = ParseFile(std::string("mods\\classes\\") + data.cFileName);
-				if (classInstance == nullptr) continue;
-
-				bool classIdExists = false;
-				for (auto i = 0; i < classVector.size(); i++) {
-					if (classVector.at(i)->id == classInstance->id) {
-						classIdExists = true;
-					}
-				}
-				
-				if (classIdExists == true) {
-					Popup("Error loading class", (std::string("Id already exists of class:\n") + classInstance->ToString()).c_str());
-					delete classInstance;
-					continue;
-				}
-
-				//Popup("Debug", classInstance->ToString().c_str());
-				classVector.push_back(classInstance);
-			} while (FindNextFile(hFind, &data));
-			FindClose(hFind);
-		}
-		*/
+		// Load stored classes
 		LoadClasses();
 
 		// Initialise class loader hooks.
@@ -202,12 +171,9 @@ class Mod : GenericMod {
 		InitializeAbilityHook();
 		InitializeCraftingHook();
 		InitializeTreasureHook();
-		// Initialise hooks of all class dll's
-		SetupCooldowns();
 
+		// Create ClassWindow object
 		classWindow = new ClassWindow(&classVector);
-
-		//PrintLoadedClasses();
 		return;
 	}
 
