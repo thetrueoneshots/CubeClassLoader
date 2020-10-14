@@ -10,6 +10,7 @@
 #include "ItemStack.h"
 #include "Equipment.h"
 #include "Interaction.h"
+#include "SaveData.h"
 #include <windows.h>
 
 namespace cube {
@@ -265,7 +266,9 @@ namespace cube {
 			_BYTE gapB78[184];
 			__int64 field_C30;
 			cube::Creature::AnimationState animation_state;
-			_BYTE gap1520[215];
+			_BYTE gap1520[8];
+			cube::SaveData* save_data;
+			_BYTE gap1530[199];
 			char end;
 
 

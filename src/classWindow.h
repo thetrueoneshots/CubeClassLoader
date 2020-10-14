@@ -29,11 +29,14 @@ class ClassWindow {
 	int specR2;
 	int specShift2;
 	int specCooldown2;
+	
+	bool show_skill_tree;
 
 	cube::Game* game;
 	void SelectClass(Class* classInstance);
 	void Update();
 	void SaveClasses();
+	void PresentSkillTree();
 public:
 	ClassWindow(std::vector<Class*>* vector);
 	void Present();

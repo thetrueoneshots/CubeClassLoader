@@ -2,9 +2,17 @@
 #include <iostream>
 #include <windows.h>
 #include <vector>
+#include "skillTree.h"
 
 class Class
 {
+	void Initialize() {
+		specializations.push_back(new Specialization());
+		specializations.push_back(new Specialization());
+		skillTree = SkillTree();
+		skillTree.AddSkill(148, 1);
+		skillTree.AddSkill(47, 2);
+	}
 public:
 
 	class Specialization 
@@ -41,13 +49,13 @@ public:
 	std::string* name;
 	int itemClass;
 	std::vector<Specialization*> specializations;
+	SkillTree skillTree;
 
 	Class() {
 		id = 0;
 		itemClass = 1;
 		name = new std::string();
-		specializations.push_back(new Specialization());
-		specializations.push_back(new Specialization());
+		Initialize();
 	}
 
 	// Todo: Rewrite to receive char*
@@ -55,8 +63,7 @@ public:
 		id = temp->id;
 		itemClass = temp->itemClass;
 		name = new std::string(tempName->begin(), tempName->end());
-		specializations.push_back(new Specialization());
-		specializations.push_back(new Specialization());
+		Initialize();
 	}
 
 	~Class() {

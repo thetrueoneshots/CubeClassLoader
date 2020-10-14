@@ -10,6 +10,7 @@ ClassWindow::ClassWindow(std::vector<Class*>* vector)
 
 void ClassWindow::SelectClass(Class* classInstance) {
 	selectedClass = classInstance;
+	show_skill_tree = false;
 	sprintf_s(className, 16, selectedClass->name->c_str());
 	sprintf_s(specName1, 50, selectedClass->specializations[0]->name->c_str());
 	sprintf_s(specName2, 50, selectedClass->specializations[1]->name->c_str());
@@ -59,6 +60,33 @@ void ClassWindow::SaveClasses() {
 		file.write((char*)spec2Name, strlen(spec2Name) + 1);
 	}
 	file.close();
+}
+
+void ClassWindow::PresentSkillTree() {
+	ImVec2 size(550, 300);
+	ImGui::Begin("Skill Tree", nullptr, size, -1.0);
+	std::string label = std::string("Available skill points: ").append(std::to_string(game->GetPlayer()->entity_data.level + 3));
+	ImGui::Text(label.c_str());
+	ImGui::Separator();
+	ImGui::Separator();
+	for (int i = 0; i < selectedClass->skillTree.GetSize(); i++) {
+		if (selectedClass->skillTree.GetSelectedSkill() == selectedClass->skillTree.GetSkillType(i)) {
+			ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.0f, 0.30f, 0.60f, 1.00f));
+			ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.0f, 0.35f, 0.75f, 1.00f));
+			ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.0f, 0.35f, 0.75f, 1.00f));
+			if (ImGui::Button(std::to_string(selectedClass->skillTree.GetSkillType(i)).c_str())) {
+				selectedClass->skillTree.SelectSkill(-1);
+			}
+			ImGui::PopStyleColor();
+			ImGui::PopStyleColor();
+			ImGui::PopStyleColor();
+		}
+		else if (ImGui::Button(std::to_string(selectedClass->skillTree.GetSkillType(i)).c_str())) {
+			game->PrintMessage(L"Selected skill\n");
+			selectedClass->skillTree.SelectSkill(i);
+		}
+	}
+	ImGui::End();
 }
 
 void ClassWindow::Present()
@@ -165,7 +193,18 @@ void ClassWindow::Present()
 		ImGui::InputInt("Spec 2 CDR (in ms)", &selectedClass->specializations[1]->cooldown, 100, 1000);
 		ImGui::InputInt("Spec 2 Shift", &selectedClass->specializations[1]->shiftAbility, 1, 1);
 
+		if (ImGui::Button("Skill Tree")) {
+			show_skill_tree = !show_skill_tree;
+		}
+
 		Update();
+	}
+	else {
+		show_skill_tree = false;
+	}
+
+	if (show_skill_tree) {
+		PresentSkillTree();
 	}
 	
 	ImGui::Separator();
