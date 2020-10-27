@@ -4,6 +4,7 @@
 #include "../imgui-1.73/examples/imgui_impl_dx11.h"
 #include "../imgui-1.73/examples/imgui_impl_win32.h"
 #include "class.h"
+#include "GUI/Window.h"
 //#include "public.h"
 
 class ClassWindow {
@@ -31,12 +32,18 @@ class ClassWindow {
 	int specCooldown2;
 	
 	bool show_skill_tree;
+	bool show_class_editor;
+
+	//WindowState state = WindowState::MENU;
+	std::unique_ptr<Window> window = std::make_unique<MenuWindow>(this);
 
 	cube::Game* game;
 	void SelectClass(Class* classInstance);
 	void Update();
 	void SaveClasses();
-	void PresentSkillTree();
+	//void PresentSkillTree();
+	void RenderMenu();
+	void RenderClassEditor();
 public:
 	ClassWindow(std::vector<Class*>* vector);
 	void Present();
@@ -44,4 +51,7 @@ public:
 	int WindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 	void OnGetKeyboardState(BYTE* diKeys);
 	void OnGetMouseState(DIMOUSESTATE* diMouse);
+
+
+	void SetWindow(WindowType type);
 };

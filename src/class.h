@@ -9,9 +9,9 @@ class Class
 	void Initialize() {
 		specializations.push_back(new Specialization());
 		specializations.push_back(new Specialization());
-		skillTree = SkillTree();
-		skillTree.AddSkill(148, 1);
-		skillTree.AddSkill(47, 2);
+		//skillTree = SkillTree();
+		//skillTree.AddSkill(148, 1);
+		//skillTree.AddSkill(47, 2);
 	}
 public:
 
@@ -49,7 +49,7 @@ public:
 	std::string* name;
 	int itemClass;
 	std::vector<Specialization*> specializations;
-	SkillTree skillTree;
+	//SkillTree skillTree;
 
 	Class() {
 		id = 0;
