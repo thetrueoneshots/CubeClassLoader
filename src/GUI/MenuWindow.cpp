@@ -1,8 +1,7 @@
 #include "Window.h"
+#include "WindowRenderer.h"
 
-#include "../classWindow.h"
-
-MenuWindow::MenuWindow(ClassWindow* windowRenderer) {
+MenuWindow::MenuWindow(WindowRenderer* windowRenderer) {
 	this->windowRenderer = windowRenderer;
 }
 

@@ -1,14 +1,18 @@
-#include "classWindow.h"
+#include "WindowRenderer.h"
 #include <fstream>
 #include <iostream>
 #include <windows.h>
 
-ClassWindow::ClassWindow(std::vector<Class*>* vector)
+void SetImGUIColorScheme();
+void DrawCursor(cube::Game* game);
+
+WindowRenderer::WindowRenderer(std::vector<Class*>* vector)
 {
 	classVector = vector;
 }
 
-void ClassWindow::SetWindow(WindowType type) {
+void WindowRenderer::SetWindow(WindowType type) 
+{
 	switch (type)
 	{
 	case WindowType::CLASS_EDITOR:
@@ -25,7 +29,7 @@ void ClassWindow::SetWindow(WindowType type) {
 	
 }
 
-void ClassWindow::Present()
+void WindowRenderer::Present()
 {
 	if (!initialized) {
 		if (!Initialize()) {
@@ -39,37 +43,17 @@ void ClassWindow::Present()
 		return;
 	}
 
-
-	// Todo: Move this to an ImGUI::Init function
-	ImGui::GetStyle().Colors[ImGuiCol_WindowBg] = ImVec4(0.15f, 0.10f, 0.15f, 0.95f);
-	ImGui::GetStyle().Colors[ImGuiCol_PopupBg] = ImVec4(0.15f, 0.10f, 0.15f, 0.95f);
-	ImGui::GetStyle().Colors[ImGuiCol_TitleBgActive] = ImVec4(0.50f, 0.30f, 0.50f, 1.00f);
-	ImGui::GetStyle().Colors[ImGuiCol_TitleBg] = ImVec4(0.30f, 0.15f, 0.30f, 1.00f);
-
-	ImGui::GetStyle().Colors[ImGuiCol_Button] = ImVec4(0.30f, 0.30f, 0.60f, 1.00f);
-	ImGui::GetStyle().Colors[ImGuiCol_FrameBg] = ImVec4(0.30f, 0.30f, 0.60f, 1.00f);
-	ImGui::GetStyle().Colors[ImGuiCol_ButtonActive] = ImVec4(0.45f, 0.35f, 0.75f, 1.00f);
-	ImGui::GetStyle().Colors[ImGuiCol_ButtonHovered] = ImVec4(0.45f, 0.35f, 0.75f, 1.00f);
-	ImGui::GetStyle().Colors[ImGuiCol_FrameBgActive] = ImVec4(0.45f, 0.35f, 0.75f, 1.00f);
-	ImGui::GetStyle().Colors[ImGuiCol_FrameBgHovered] = ImVec4(0.45f, 0.35f, 0.75f, 1.00f);
-	ImGui::GetStyle().Colors[ImGuiCol_CheckMark] = ImVec4(0.70f, 0.60f, 0.90f, 1.00f);
-
-	ImGui::GetStyle().PopupRounding = 10.0;
-	ImGui::GetStyle().WindowRounding = 10.0;
-	ImGui::GetStyle().FrameRounding = 4.0;
-
-	ImGui::GetStyle().WindowMenuButtonPosition = ImGuiDir_None;
-	ImGui::GetStyle().WindowTitleAlign = ImVec2(0.02, 0.5);
-
+	// Todo: Check if this only needs to be called once
+	SetImGUIColorScheme();
 
 	ImGuiIO& io = ImGui::GetIO();
 	io.IniFilename = nullptr;
 	wantMouse = io.WantCaptureMouse;
 	wantKeyboard = io.WantCaptureKeyboard;
 	io.Fonts->AddFontFromFileTTF("resource1.dat", 16.0f);
+	io.DisplaySize = ImVec2((float)game->width, (float)game->height);
 
 	ImGui_ImplDX11_NewFrame();
-	io.DisplaySize = ImVec2((float)game->width, (float)game->height);
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
 
@@ -84,20 +68,11 @@ void ClassWindow::Present()
 	ImGui::Render();
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 
-	// Todo: Move this to a draw cursor function
 	// We just drew over the original cursor, so draw the cursor again on top of the gui
-	float guiScale = game->options.guiScale;
-	FloatVector2 cursorPosition = game->plasma_engine->mouse_position;
-	plasma::Matrix<float>* trans = &game->gui.cursor_node->transformation->matrix;
-	plasma::Matrix<float> oldTrans = *trans;
-	*trans = trans->scale(guiScale).translate(cursorPosition.x - (cursorPosition.x / guiScale), cursorPosition.y - (cursorPosition.y / guiScale), 0);
-
-	game->gui.cursor_node->Draw(0);
-
-	*trans = oldTrans;
+	DrawCursor(this->game);
 }
 
-bool ClassWindow::Initialize()
+bool WindowRenderer::Initialize()
 {
 	// If the user does not have the window active when it starts,
 	// then getting the hwnd will fail
@@ -114,7 +89,7 @@ bool ClassWindow::Initialize()
 }
 
 extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
-int ClassWindow::WindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
+int WindowRenderer::WindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	ImGui_ImplWin32_WndProcHandler(hWnd, msg, wParam, lParam);
 	if (wantMouse) {
@@ -137,18 +112,54 @@ int ClassWindow::WindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	return 0;
 }
 
-void ClassWindow::OnGetKeyboardState(BYTE* diKeys)
+void WindowRenderer::OnGetKeyboardState(BYTE* diKeys)
 {
 	if (wantKeyboard) {
 		memset(diKeys, 0, 256);
 	}
 }
 
-void ClassWindow::OnGetMouseState(DIMOUSESTATE* diMouse) 
+void WindowRenderer::OnGetMouseState(DIMOUSESTATE* diMouse) 
 {
 	if (wantMouse) {
 		diMouse->rgbButtons[0] = 0;
 		diMouse->rgbButtons[1] = 0;
 		diMouse->rgbButtons[2] = 0;
 	}
+}
+
+void SetImGUIColorScheme() 
+{
+	ImGui::GetStyle().Colors[ImGuiCol_WindowBg] = ImVec4(0.15f, 0.10f, 0.15f, 0.95f);
+	ImGui::GetStyle().Colors[ImGuiCol_PopupBg] = ImVec4(0.15f, 0.10f, 0.15f, 0.95f);
+	ImGui::GetStyle().Colors[ImGuiCol_TitleBgActive] = ImVec4(0.50f, 0.30f, 0.50f, 1.00f);
+	ImGui::GetStyle().Colors[ImGuiCol_TitleBg] = ImVec4(0.30f, 0.15f, 0.30f, 1.00f);
+
+	ImGui::GetStyle().Colors[ImGuiCol_Button] = ImVec4(0.30f, 0.30f, 0.60f, 1.00f);
+	ImGui::GetStyle().Colors[ImGuiCol_FrameBg] = ImVec4(0.30f, 0.30f, 0.60f, 1.00f);
+	ImGui::GetStyle().Colors[ImGuiCol_ButtonActive] = ImVec4(0.45f, 0.35f, 0.75f, 1.00f);
+	ImGui::GetStyle().Colors[ImGuiCol_ButtonHovered] = ImVec4(0.45f, 0.35f, 0.75f, 1.00f);
+	ImGui::GetStyle().Colors[ImGuiCol_FrameBgActive] = ImVec4(0.45f, 0.35f, 0.75f, 1.00f);
+	ImGui::GetStyle().Colors[ImGuiCol_FrameBgHovered] = ImVec4(0.45f, 0.35f, 0.75f, 1.00f);
+	ImGui::GetStyle().Colors[ImGuiCol_CheckMark] = ImVec4(0.70f, 0.60f, 0.90f, 1.00f);
+
+	ImGui::GetStyle().PopupRounding = 10.0;
+	ImGui::GetStyle().WindowRounding = 10.0;
+	ImGui::GetStyle().FrameRounding = 4.0;
+
+	ImGui::GetStyle().WindowMenuButtonPosition = ImGuiDir_None;
+	ImGui::GetStyle().WindowTitleAlign = ImVec2(0.02, 0.5);
+}
+
+void DrawCursor(cube::Game* game)
+{
+	float guiScale = game->options.guiScale;
+	FloatVector2 cursorPosition = game->plasma_engine->mouse_position;
+	plasma::Matrix<float>* trans = &game->gui.cursor_node->transformation->matrix;
+	plasma::Matrix<float> oldTrans = *trans;
+	*trans = trans->scale(guiScale).translate(cursorPosition.x - (cursorPosition.x / guiScale), cursorPosition.y - (cursorPosition.y / guiScale), 0);
+
+	game->gui.cursor_node->Draw(0);
+
+	*trans = oldTrans;
 }

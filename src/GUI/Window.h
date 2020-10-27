@@ -5,7 +5,7 @@
 #include "../imgui-1.73/examples/imgui_impl_win32.h"
 
 class Class;
-class ClassWindow;
+class WindowRenderer;
 namespace cube
 {
 	class Game;
@@ -36,9 +36,9 @@ public:
 class MenuWindow : public Window
 {
 private:
-	ClassWindow* windowRenderer;
+	WindowRenderer* windowRenderer;
 public:
-	MenuWindow(ClassWindow* windowRenderer);
+	MenuWindow(WindowRenderer* windowRenderer);
 	void Render() override;
 	bool IsOpen() override;
 };

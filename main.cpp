@@ -65,7 +65,7 @@ bool InCraftingGUI(cube::Game* game) {
 */
 class Mod : GenericMod {
 
-	ClassWindow* classWindow;
+	WindowRenderer* windowRenderer;
 	/* Hook for the chat function. Triggers when a user sends something in the chat.
 	 * @param	{std::wstring*} message
 	 * @return	{int}
@@ -173,12 +173,12 @@ class Mod : GenericMod {
 		InitializeTreasureHook();
 
 		// Create ClassWindow object
-		classWindow = new ClassWindow(&classVector);
+		windowRenderer = new WindowRenderer(&classVector);
 		return;
 	}
 
 	void OnGetKeyboardState(BYTE* diKeys) {
-		classWindow->OnGetKeyboardState(diKeys);
+		windowRenderer->OnGetKeyboardState(diKeys);
 		static DButton lShiftKey(42);
 		static DButton rKey(19);
 		lShiftKey.Update(diKeys);
@@ -200,17 +200,17 @@ class Mod : GenericMod {
 	}
 
 	void OnGetMouseState(DIMOUSESTATE* diMouse) {
-		classWindow->OnGetMouseState(diMouse);
+		windowRenderer->OnGetMouseState(diMouse);
 	}
 
 
 	void OnPresent(IDXGISwapChain* SwapChain, UINT SyncInterval, UINT Flags) {
-		classWindow->Present();
+		windowRenderer->Present();
 	}
 
 
 	int OnWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
-		return classWindow->WindowProc(hwnd, uMsg, wParam, lParam);
+		return windowRenderer->WindowProc(hwnd, uMsg, wParam, lParam);
 	}
 };
 

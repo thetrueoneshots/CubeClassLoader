@@ -16,9 +16,10 @@
 #include "DButton.h"
 #include "src/public.h"
 #include "src/class.h"
-#include "src/classWindow.h"
 #include "src/fileParser.h"
 #include "src/memory/memory_helper.h"
+// Include GUI
+#include "src/GUI/WindowRenderer.h"
 // Include hooks
 #include "src/hooks/menu_hook.h"
 #include "src/hooks/item_restrictions_hook.h"
