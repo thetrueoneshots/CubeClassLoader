@@ -3,14 +3,15 @@
 #include "../imgui-1.73/imgui.h"
 #include "../imgui-1.73/examples/imgui_impl_dx11.h"
 #include "../imgui-1.73/examples/imgui_impl_win32.h"
+#include "../skilltree/SkillTree.h"
 
 class Class;
 class WindowRenderer;
+
 namespace cube
 {
 	class Game;
 }
-
 
 enum WindowType 
 {
@@ -22,13 +23,15 @@ enum WindowType
 class Window 
 {
 public:
-	virtual void Render() {
+	virtual void Render() 
+	{
 		ImGui::Begin("Window", nullptr, ImVec2(100, 100), -1.0, 0);
 		ImGui::Text("This is the standard window");
 		ImGui::End();
 		return;
 	}
-	virtual bool IsOpen() {
+	virtual bool IsOpen() 
+	{
 		return true;
 	}
 };
@@ -52,6 +55,7 @@ private:
 	Class* selectedClass = nullptr;
 	std::vector<Class*>* classVector;
 
+	// Todo: Move this to a ClassEditorState class.
 	char className[16];
 	int itemClass;
 
@@ -64,6 +68,7 @@ private:
 	int specR2;
 	int specShift2;
 	int specCooldown2;
+
 	void SelectClass(Class* classInstance);
 	void Update();
 	void SaveClasses();
@@ -76,8 +81,9 @@ public:
 class SkillTreeWindow : public Window
 {
 	bool is_open;
+	SkillTree* skillTree;
 public:
-	SkillTreeWindow();
+	SkillTreeWindow(SkillTree* skillTree);
 	void Render() override;
 	bool IsOpen() override;
 };

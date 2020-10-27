@@ -6,6 +6,8 @@
 #include <ctime>    // For time()
 #include <cstdlib>  // For srand() and rand()
 
+void InitializeTreasureHook();
+
 GETTER_VAR(void*, ASMTreasure_ret_1);
 GETTER_VAR(void*, ASMTreasure_ret_2);
 GETTER_VAR(void*, ASMTreasure_ret_3);

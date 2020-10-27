@@ -3,6 +3,8 @@
 #include "../class.h"
 #include "cwsdk.h"
 
+void InitializeItemRestrictionsHook();
+
 GETTER_VAR(void*, ASMCustomClassItemRestriction_jmpOne);
 GETTER_VAR(void*, ASMCustomClassItemRestriction_jmpTwo);
 GETTER_VAR(void*, ASMCustomClassItemRestriction_jmpThree);

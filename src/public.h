@@ -1,10 +1,14 @@
 #pragma once
+#include <fstream>
 #include <vector>
 #include <string>
 #include <map>
 #include "class.h"
+#include "skilltree/SkillTree.h"
 
 std::vector<Class*> classVector;
+SkillTree* skillTree;
+std::vector<SkillTree*> skillTreeVector;
 std::vector<int>* cooldownMap;
 
 void Popup(const char* title, const char* msg) {
@@ -15,6 +19,14 @@ void SetCooldown(std::vector<int> ids, int cooldown) {
 	for (auto i = 0; i < ids.size(); i++) {
 		cooldownMap->at(ids[i]) = cooldown;
 	}
+}
+
+void LoadSkillTrees()
+{
+	char name[5] = "name";
+	SkillTree* obj = new SkillTree(name);
+	skillTreeVector.push_back(obj);
+	skillTree = obj;
 }
 
 /* Loads all the classes from the save file.

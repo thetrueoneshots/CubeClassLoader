@@ -3,6 +3,8 @@
 #include "../class.h"
 #include "cwsdk.h"
 
+void InitializeAbilityHook();
+
 GETTER_VAR(void*, ASMUltimateActionInsert_jmpback);
 GETTER_VAR(void*, ASMUltimateActionInsert_oldCode_jmp);
 GETTER_VAR(void*, ASMUltimateActionInsert_zero_return_jmp);

@@ -6,9 +6,10 @@
 void SetImGUIColorScheme();
 void DrawCursor(cube::Game* game);
 
-WindowRenderer::WindowRenderer(std::vector<Class*>* vector)
+WindowRenderer::WindowRenderer(std::vector<Class*>* vector, SkillTree* skillTree)
 {
-	classVector = vector;
+	this->classVector = vector;
+	this->skillTree = skillTree;
 }
 
 void WindowRenderer::SetWindow(WindowType type) 
@@ -19,7 +20,7 @@ void WindowRenderer::SetWindow(WindowType type)
 		this->window = std::make_unique<ClassEditorWindow>(this->game, this->classVector);
 		break;
 	case WindowType::SKILL_TREE:
-		this->window = std::make_unique<SkillTreeWindow>();
+		this->window = std::make_unique<SkillTreeWindow>(this->skillTree);
 		break;
 	case WindowType::MENU:
 	default:

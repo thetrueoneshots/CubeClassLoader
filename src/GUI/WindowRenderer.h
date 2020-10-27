@@ -5,6 +5,7 @@
 #include "../../imgui-1.73/examples/imgui_impl_win32.h"
 #include "../class.h"
 #include "Window.h"
+#include "../skilltree/SkillTree.h"
 //#include "public.h"
 
 class WindowRenderer {
@@ -18,8 +19,9 @@ class WindowRenderer {
 	std::unique_ptr<Window> window = std::make_unique<MenuWindow>(this);
 	cube::Game* game;
 	std::vector<Class*>* classVector;
+	SkillTree* skillTree;
 public:
-	WindowRenderer(std::vector<Class*>* vector);
+	WindowRenderer(std::vector<Class*>* vector, SkillTree* skillTree);
 	void Present();
 	bool Initialize();
 	int WindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
