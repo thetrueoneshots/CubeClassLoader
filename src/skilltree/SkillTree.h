@@ -4,15 +4,13 @@
 #include "cwsdk.h"
 
 #include "Stats.h"
+#include "UltimateSkills.h"
+
 class PassiveSkills
 {
 
 };
 class ShiftSkills
-{
-
-};
-class UltimateSkills 
 {
 
 };
@@ -25,6 +23,7 @@ enum SkillTreeType
 	ULTIMATE_SKILLS,
 };
 
+// Todo: Consider a reset per type of skilltree
 static int SKILL_TREE_RESET_COST = 100;
 
 class SkillTree

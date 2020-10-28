@@ -1,8 +1,6 @@
 #pragma once
 #include <limits.h>
 
-// This is for cara. If she reads this, I will do a karaoke night with cara.
-
 /*
  * An enum for the different types of stats available.
  * Note: STAT_TYPE_END is not a valid StatType, but an indicator for the size and end of the amount of StatTypes.

@@ -11,7 +11,7 @@ void HandleKeyboardState(BYTE* diKeys);
 void HandleInCraftingGUI(cube::Game* game);
 void HandleFirstTickInitialize(cube::Game* game);
 void Init();
-void UpdateStat(cube::Creature* creature, float* stat, StatType type1, StatType type2, float factor1 = 1.0f, float factor2 = 1.0f);
+bool UpdateStat(cube::Creature* creature, float* stat, StatType type1, StatType type2, float factor1 = 1.0f, float factor2 = 1.0f);
 void HandleHealthRegen(cube::Creature* player);
 void HandleMovementSpeed(cube::Creature* player);
 
@@ -47,7 +47,6 @@ class Mod : GenericMod {
 		if (player == nullptr) return;
 
 		HandleHealthRegen(player);
-		//HandleMovementSpeed(player);
 
 		return;
 	}
@@ -59,7 +58,6 @@ class Mod : GenericMod {
 	void Initialize() {
 		Init();
 
-		// Create ClassWindow object
 		windowRenderer = new WindowRenderer(&classVector, skillTree);
 		return;
 	}
@@ -126,14 +124,6 @@ class Mod : GenericMod {
 	void OnCreatureManaGenerationCalculated(cube::Creature* creature, float* manaGeneration) 
 	{
 		UpdateStat(creature, manaGeneration, StatType::MANA_REGEN, StatType::STAT_TYPE_END);
-		/*
-		cube::Game* game = cube::GetGame();
-		if (!game) return;
-		cube::World* world = game->world;
-		if (!world) return;
-		if (cube::GetGame()->world->local_creature == creature) {
-			*manaGeneration *= 1 + ((skillTree->stats.GetStatLevel(StatType::MANA_REGEN) * STAT_MODIFIERS[StatType::MANA_REGEN]) / 100.0);
-		}*/
 	}
 };
 
@@ -156,17 +146,18 @@ void HandleMovementSpeed(cube::Creature* player) {
 	player->entity_data.speed *= 1 + skillTree->stats.GetStatLevel(StatType::MOVEMENT_SPEED) * STAT_MODIFIERS[StatType::MOVEMENT_SPEED] / 100.0f;
 }
 
-void UpdateStat(cube::Creature* creature, float* stat, StatType type1, StatType type2, float factor1, float factor2) {
+bool UpdateStat(cube::Creature* creature, float* stat, StatType type1, StatType type2, float factor1, float factor2) {
 	cube::Game* game = cube::GetGame();
-	if (!game) return;
+	if (!game) return false;
 	cube::World* world = game->world;
-	if (!world) return;
-	if (cube::GetGame()->world->local_creature == creature) {
-		if (type1 < StatType::STAT_TYPE_END && type1 >= 0)
-			*stat *= 1 + ((skillTree->stats.GetStatLevel(type1) * STAT_MODIFIERS[type1]) / (100.0 * factor1));
-		if (type2 < StatType::STAT_TYPE_END && type2 >= 0)
-			*stat += skillTree->stats.GetStatLevel(type2) * STAT_MODIFIERS[type2] / factor2;
-	}
+	if (!world) return false;
+	if (cube::GetGame()->world->local_creature != creature) return false;
+
+	if (type1 < StatType::STAT_TYPE_END && type1 >= 0)
+		*stat *= 1 + ((skillTree->stats.GetStatLevel(type1) * STAT_MODIFIERS[type1]) / (100.0 * factor1));
+	if (type2 < StatType::STAT_TYPE_END && type2 >= 0)
+		*stat += skillTree->stats.GetStatLevel(type2) * STAT_MODIFIERS[type2] / factor2;
+	return true;
 }
 
 void PrintLoadedClasses() {
