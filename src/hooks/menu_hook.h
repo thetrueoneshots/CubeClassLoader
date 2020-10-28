@@ -3,6 +3,7 @@
 #include "../class.h"
 #include "cwsdk.h"
 
+void InitializeMenuHook();
 
 GETTER_VAR(void*, ASMSetMenuClassName_retn);
 GETTER_VAR(void*, ASMSetClassName_1_ret);

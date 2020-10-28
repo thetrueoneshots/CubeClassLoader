@@ -72,8 +72,8 @@ static int STAT_MODIFIERS[StatType::STAT_TYPE_END] =
 	5,	//	SCALING_HASTE [%]
 	5,	//	MANA_REGEN [%]
 	5,	//	STAMINA_REGEN [%]
-	1,	//	HEALTH_REGEN [0.1 %]
-	5	//	MOVEMENT_SPEED [%]
+	1,	//	HEALTH_REGEN [0.01 % (per game tick)]
+	100	//	MOVEMENT_SPEED [%]
 };			
 
 /*
@@ -93,10 +93,12 @@ static int STAT_MAX_LEVELS[StatType::STAT_TYPE_END] =
 	INT_MAX,
 	INT_MAX,
 	INT_MAX,
+	INT_MAX,
+	INT_MAX,
 	INT_MAX, // Todo: Reconsider changing Mana Regen max level
 	INT_MAX, // Todo: Reconsider changing Stamina Regen max level
 	20,
-	10,
+	15,
 };
 
 /*

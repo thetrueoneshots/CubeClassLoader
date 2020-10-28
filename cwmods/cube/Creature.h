@@ -101,12 +101,14 @@ namespace cube {
 			_BYTE gap149[27];
 			FloatVector3 attack_rotation;
 			float HP;
-			float float_184;
+			float block_power;
 			float MP;
 			float stealth;
 			_BYTE gap180[4];
-			char field_184;
-			_BYTE gap185[67];
+			//char field_184;
+			float speed;
+			//_BYTE gap185[67];
+			_BYTE gap188[64];
 			cube::Item unk_item;
 			cube::Equipment equipment;
 			char name[16];

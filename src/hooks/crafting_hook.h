@@ -3,6 +3,8 @@
 #include "../class.h"
 #include "cwsdk.h"
 
+void InitializeCraftingHook();
+
 GETTER_VAR(void*, ASMSetCraftingItemType_retn);
 GETTER_VAR(void*, ASMSetCraftingItemType2_retn);
 GETTER_VAR(void*, ASMSetCraftingItemType3_retn);

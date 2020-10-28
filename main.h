@@ -26,6 +26,7 @@
 #include "src/hooks/abilities_hook.h"
 #include "src/hooks/crafting_hook.h"
 #include "src/hooks/treasure_fix.h"
+#include "src/hooks/on_creature_update_hook.h"
 
 #define MUST_IMPORT(dllname, name)\
 dllname->name = GetProcAddress(dllname->handle, #name);\

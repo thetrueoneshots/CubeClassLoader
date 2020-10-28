@@ -37,6 +37,9 @@ void SkillTreeWindow::Render()
 	ImGui::Begin("Skill Tree Window", &this->is_open, ImVec2(150, 100), -1.0);
 	for (int i = 0; i < StatType::STAT_TYPE_END; i++) {
 		if (ImGui::Button(STAT_NAMES[i])) {
+			if (i == StatType::HEALTH_REGEN) {
+				cube::GetGame()->PrintMessage(L"Increase health regen\n");
+			}
 			skillTree->stats.IncreaseStat((StatType) i);
 		}
 	}

@@ -2,6 +2,7 @@
 #include <fstream>
 #include <map>
 #include <utility>
+#include <algorithm>
 
 void PrintLoadedClasses();
 bool InGUI(cube::Game* game);
@@ -11,6 +12,8 @@ void HandleInCraftingGUI(cube::Game* game);
 void HandleFirstTickInitialize(cube::Game* game);
 void Init();
 void UpdateStat(cube::Creature* creature, float* stat, StatType type1, StatType type2, float factor1 = 1.0f, float factor2 = 1.0f);
+void HandleHealthRegen(cube::Creature* player);
+void HandleMovementSpeed(cube::Creature* player);
 
 /* Mod class containing all the functions for the mod.
 */
@@ -39,6 +42,12 @@ class Mod : GenericMod {
 
 		if (InCraftingGUI(game))
 			HandleInCraftingGUI(game);
+
+		cube::Creature* player = game->GetPlayer();
+		if (player == nullptr) return;
+
+		HandleHealthRegen(player);
+		//HandleMovementSpeed(player);
 
 		return;
 	}
@@ -131,6 +140,20 @@ class Mod : GenericMod {
 // Export of the mod created in this file, so that the modloader can see and use it.
 EXPORT Mod* MakeMod() {
 	return new Mod();
+}
+
+void HandleHealthRegen(cube::Creature* player) {
+	float* currHP = &player->entity_data.HP;
+	if (*currHP == 0) return;
+
+	float maxHP = player->GetMaxHP();
+	float increase = (skillTree->stats.GetStatLevel(StatType::HEALTH_REGEN) * (STAT_MODIFIERS[StatType::HEALTH_REGEN] / 10000.0f)) * maxHP;
+	float newHP = *currHP + increase;
+	*currHP = newHP < maxHP ? newHP : maxHP;
+}
+
+void HandleMovementSpeed(cube::Creature* player) {
+	player->entity_data.speed *= 1 + skillTree->stats.GetStatLevel(StatType::MOVEMENT_SPEED) * STAT_MODIFIERS[StatType::MOVEMENT_SPEED] / 100.0f;
 }
 
 void UpdateStat(cube::Creature* creature, float* stat, StatType type1, StatType type2, float factor1, float factor2) {
@@ -294,4 +317,5 @@ void Init()
 	InitializeAbilityHook();
 	InitializeCraftingHook();
 	InitializeTreasureHook();
+	InitializeOnCreatureUpdateHook();
 }
