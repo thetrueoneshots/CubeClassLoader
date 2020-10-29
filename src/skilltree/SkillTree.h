@@ -5,12 +5,9 @@
 
 #include "Stats.h"
 #include "UltimateSkills.h"
+#include "ShiftSkills.h"
 
 class PassiveSkills
-{
-
-};
-class ShiftSkills
 {
 
 };

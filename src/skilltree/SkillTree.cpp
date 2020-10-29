@@ -26,5 +26,6 @@ int SkillTree::GetUsedSkillPoints()
 	int cnt = 0;
 	cnt += this->stats.CountSkillPoints();
 	cnt += this->ultimateSkills.CountSkillPoints();
+	cnt += this->shiftSkills.CountSkillPoints();
 	return cnt;
 }
