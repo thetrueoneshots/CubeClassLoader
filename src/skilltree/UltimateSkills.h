@@ -1,9 +1,8 @@
 #pragma once
-
+// Todo: Add cooldown to burrow
 enum UltimateType
 {
 	FIRE_MISSLES = 0,
-	TELEPORT,
 	BURROW,
 	LAVA_PUDDLE,
 	MULTI_SLAM,
@@ -21,8 +20,7 @@ enum UltimateType
 static int ULTIMATE_IDS[UltimateType::ULTIMATE_SKILL_TYPE_END] =
 {
 	47,		//FIRE_MISSLES
-	51,		//TELEPORT
-	72,		//BURROW
+	130,	//BURROW
 	98,		//LAVA_PUDDLE
 	100,	//MULTI_SLAM
 	109,	//CAMOUFLAGE
@@ -38,8 +36,7 @@ static int ULTIMATE_IDS[UltimateType::ULTIMATE_SKILL_TYPE_END] =
 static int ULTIMATE_COSTS[UltimateType::ULTIMATE_SKILL_TYPE_END] =
 {
 	10,		//FIRE_MISSLES
-	1,		//TELEPORT
-	5,		//BURROW
+	15,		//BURROW
 	5,		//LAVA_PUDDLE
 	10,		//MULTI_SLAM
 	5,		//CAMOUFLAGE
@@ -55,7 +52,6 @@ static int ULTIMATE_COSTS[UltimateType::ULTIMATE_SKILL_TYPE_END] =
 static char* ULTIMATE_NAMES[UltimateType::ULTIMATE_SKILL_TYPE_END] =
 {
 	(char*)"FIRE_MISSLES",
-	(char*)"TELEPORT",
 	(char*)"BURROW",
 	(char*)"LAVA_PUDDLE",
 	(char*)"MULTI_SLAM",

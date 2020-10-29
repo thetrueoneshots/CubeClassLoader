@@ -18,6 +18,7 @@ void SkillTree::Reset(cube::Creature* creature)
 	creature->gold -= SKILL_TREE_RESET_COST;
  	this->stats.ResetStats();
 	this->ultimateSkills.ResetSkills();
+	this->shiftSkills.ResetSkills();
 }
 
 // Todo: Implement

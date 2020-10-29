@@ -9,7 +9,7 @@ GETTER_VAR(void*, ASMUpdate_jmpback);
 
 extern "C" void OnCreatureUpdate(cube::Creature* creature, cube::World* world) {
 	if (creature == world->local_creature)
-		creature->entity_data.speed *= 1 + skillTree->stats.GetStatLevel(StatType::MOVEMENT_SPEED) * STAT_MODIFIERS[StatType::MOVEMENT_SPEED] / 100.0f;
+		creature->entity_data.speed *= 1 + skillTree->stats.GetStatLevel(StatType::MOVEMENT_SPEED) * STAT_MODIFIERS[StatType::MOVEMENT_SPEED] / 1000.0f;
 }
 
 extern "C" void IncreaseMSOnRoad(cube::Creature * creature) {

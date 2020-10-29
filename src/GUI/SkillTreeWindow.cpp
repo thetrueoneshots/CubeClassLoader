@@ -76,7 +76,6 @@ void SkillTreeWindow::RenderUltimateSkills()
 	}
 }
 
-// Todo: Implement
 void SkillTreeWindow::RenderShiftSkills()
 {
 	int selectedShiftSkill = this->skillTree->shiftSkills.GetSelectedSkill();
@@ -157,14 +156,13 @@ void SkillTreeWindow::RenderStats()
 		sprintf(buffer, "Increase %s", STAT_NAMES[i]);
 		if (ImGui::Button(buffer)) {
 			if (availablePoints >= 1)
-				skillTree->stats.IncreaseStat((StatType)i);
+				this->skillTree->stats.IncreaseStat((StatType)i);
 		}
 
 		ImGui::PopStyleVar();
 
 		ImGui::SameLine();
 		ImGui::Text("Level: %d", this->skillTree->stats.GetStatLevel((StatType)i));
-		//ImGui::LabelText(STAT_NAMES[i], "Level: %d", this->skillTree->stats.GetStatLevel((StatType)i));
 	}
 }
 
@@ -184,7 +182,12 @@ void SkillTreeWindow::Render()
 {
 	int availablePoints = this->GetAvailablePoints();
 	ImGui::Begin("Skill Tree Window", &this->is_open, ImVec2(150, 100), -1.0);
-	ImGui::Text("Available SkillPoints: %d (Used: %d)", availablePoints, skillTree->GetUsedSkillPoints());
+	ImGui::Text("Available SkillPoints: %d (Used: %d)", availablePoints, this->skillTree->GetUsedSkillPoints());
+	ImGui::SameLine();
+	if (ImGui::Button("Reset Skill Tree"))
+	{
+		this->skillTree->Reset(game->GetPlayer());
+	}
 
 	this->RenderUltimateSkills();
 	this->RenderShiftSkills();

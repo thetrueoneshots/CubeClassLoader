@@ -235,7 +235,26 @@ void HandleKeyboardState(BYTE* diKeys)
 		Class* classInstance = GetClassByGameId(classType);
 		if (classInstance != nullptr) {
 			player->entity_data.time_since_ability = 0.0;
-			player->entity_data.current_ability = classInstance->specializations[specType]->shiftAbility;
+			if (classInstance->specializations[specType]->useSkillTree)
+			{
+				if (skillTree != nullptr)
+				{
+					ShiftSkillType type = skillTree->shiftSkills.GetSelectedSkill();
+					if (type != ShiftSkillType::SHIFT_SKILL_TYPE_END)
+					{
+						player->entity_data.current_ability = SHIFT_SKILL_IDS[type];
+					}
+					else 
+					{
+						player->entity_data.current_ability = 0;
+					}
+				}
+			}
+			else
+			{
+				player->entity_data.current_ability = classInstance->specializations[specType]->shiftAbility;
+			}
+			
 		}
 	}
 	return;
