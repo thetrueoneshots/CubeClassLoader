@@ -5178,8 +5178,165 @@ static void ImGui::RenderWindowOuterBorders(ImGuiWindow* window)
     ImGuiContext& g = *GImGui;
     float rounding = window->WindowRounding;
     float border_size = window->WindowBorderSize;
+    //BEGIN:OLD
+    //if (border_size > 0.0f && !(window->Flags & ImGuiWindowFlags_NoBackground))
+    //    window->DrawList->AddRect(window->Pos, window->Pos + window->Size, GetColorU32(ImGuiCol_Border), rounding, ImDrawCornerFlags_All, border_size);
+    //END:OLD
+    //BEGIN:NEW
     if (border_size > 0.0f && !(window->Flags & ImGuiWindowFlags_NoBackground))
-        window->DrawList->AddRect(window->Pos, window->Pos + window->Size, GetColorU32(ImGuiCol_Border), rounding, ImDrawCornerFlags_All, border_size);
+    {
+        // Outer Border
+
+        //Top-Left -> Top-Right
+        window->DrawList->AddLine(
+            window->Pos - ImVec2(- border_size, border_size),
+            window->Pos + ImVec2(window->Size.x - border_size, - border_size),
+            GetColorU32(ImGuiCol_BorderShadow), border_size
+        );
+        //Top-Left -> Bottom-Left
+        window->DrawList->AddLine(
+            window->Pos - ImVec2(border_size, - border_size),
+            window->Pos + ImVec2(- border_size, window->Size.y - border_size),
+            GetColorU32(ImGuiCol_BorderShadow), border_size
+        );
+        //Top-Right -> Bottom-Right
+        window->DrawList->AddLine(
+            window->Pos + ImVec2(window->Size.x + border_size, border_size),
+            window->Pos + window->Size + ImVec2(border_size, - border_size),
+            GetColorU32(ImGuiCol_BorderShadow), border_size
+        );
+        //Bottom-Left -> Bottom-Right
+        window->DrawList->AddLine(
+            window->Pos + ImVec2(border_size, window->Size.y + border_size),
+            window->Pos + window->Size + ImVec2(- border_size, border_size),
+            GetColorU32(ImGuiCol_BorderShadow), border_size
+        );
+        //Top-Left gap-down
+        window->DrawList->AddLine(
+            window->Pos + ImVec2(border_size, - border_size),
+            window->Pos + ImVec2(border_size, border_size),
+            GetColorU32(ImGuiCol_BorderShadow), border_size
+        );
+        //Top-Left gap-right
+        window->DrawList->AddLine(
+            window->Pos + ImVec2(- border_size, border_size),
+            window->Pos + ImVec2(border_size, border_size),
+            GetColorU32(ImGuiCol_BorderShadow), border_size
+        );
+        //Top-Right gap-down
+        window->DrawList->AddLine(
+            window->Pos + ImVec2(window->Size.x - border_size, -border_size),
+            window->Pos + ImVec2(window->Size.x - border_size, border_size),
+            GetColorU32(ImGuiCol_BorderShadow), border_size
+        );
+        //Top-Right gap-left
+        window->DrawList->AddLine(
+            window->Pos + ImVec2(window->Size.x + border_size, border_size),
+            window->Pos + ImVec2(window->Size.x - border_size, border_size),
+            GetColorU32(ImGuiCol_BorderShadow), border_size
+        );
+        //Bottom-Left gap-right
+        window->DrawList->AddLine(
+            window->Pos + ImVec2(-border_size, window->Size.y - border_size),
+            window->Pos + ImVec2(border_size, window->Size.y - border_size),
+            GetColorU32(ImGuiCol_BorderShadow), border_size
+        );
+        //Bottom-Left gap-up
+        window->DrawList->AddLine(
+            window->Pos + ImVec2(border_size, window->Size.y + border_size),
+            window->Pos + ImVec2(border_size, window->Size.y - border_size),
+            GetColorU32(ImGuiCol_BorderShadow), border_size
+        );
+        //Bottom-Right gap-left
+        window->DrawList->AddLine(
+            window->Pos + window->Size + ImVec2(border_size, -border_size),
+            window->Pos + window->Size - ImVec2(border_size, border_size),
+            GetColorU32(ImGuiCol_BorderShadow), border_size
+        );
+        //Bottom-Right gap-up
+        window->DrawList->AddLine(
+            window->Pos + window->Size + ImVec2(-border_size, border_size),
+            window->Pos + window->Size - ImVec2(border_size, border_size),
+            GetColorU32(ImGuiCol_BorderShadow), border_size
+        );
+
+
+        // Inner Border
+
+        //Top-Left -> Top-Right
+        window->DrawList->AddLine(
+            window->Pos + ImVec2(2.0 * border_size, 0.0),
+            window->Pos + ImVec2(window->Size.x - 2.0* border_size, 0.0),
+            GetColorU32(ImGuiCol_Border), border_size
+        );
+        //Top-Left -> Bottom-Left
+        window->DrawList->AddLine(
+            window->Pos + ImVec2(0.0, 2.0 * border_size),
+            window->Pos + ImVec2(0.0, window->Size.y - 2.0 * border_size),
+            GetColorU32(ImGuiCol_Border), border_size
+        );
+        //Top-Right -> Bottom->Right
+        window->DrawList->AddLine(
+            window->Pos + ImVec2(window->Size.x, 2.0 * border_size),
+            window->Pos + window->Size - ImVec2(0.0, 2.0 * border_size),
+            GetColorU32(ImGuiCol_Border), border_size
+        );
+        //Bottom-Left -> Bottom->Right
+        window->DrawList->AddLine(
+            window->Pos + ImVec2(2.0 * border_size, window->Size.y),
+            window->Pos + window->Size - ImVec2(2.0 * border_size, 0.0),
+            GetColorU32(ImGuiCol_Border), border_size
+        );
+        //Top-Left gap-down
+        window->DrawList->AddLine(
+            window->Pos + ImVec2(2.0 * border_size, 0.0),
+            window->Pos + ImVec2(2.0 * border_size, 2.0 * border_size),
+            GetColorU32(ImGuiCol_Border), border_size
+        );
+        //Top-Left gap-right
+        window->DrawList->AddLine(
+            window->Pos + ImVec2(0.0, 2.0 * border_size),
+            window->Pos + ImVec2(2.0 * border_size, 2.0 * border_size),
+            GetColorU32(ImGuiCol_Border), border_size
+        );
+        //Top-Right gap-down
+        window->DrawList->AddLine(
+            window->Pos + ImVec2(window->Size.x - 2.0 * border_size, 0),
+            window->Pos + ImVec2(window->Size.x - 2.0 * border_size, 2.0 * border_size),
+            GetColorU32(ImGuiCol_Border), border_size
+        );
+        //Top-Right gap-left
+        window->DrawList->AddLine(
+            window->Pos + ImVec2(window->Size.x, 2.0 * border_size),
+            window->Pos + ImVec2(window->Size.x - 2.0 * border_size, 2.0 * border_size),
+            GetColorU32(ImGuiCol_Border), border_size
+        );
+        //Bottom-Left gap-right
+        window->DrawList->AddLine(
+            window->Pos + ImVec2(0.0, window->Size.y - 2.0 * border_size),
+            window->Pos + ImVec2(2.0 * border_size, window->Size.y - 2.0 * border_size),
+            GetColorU32(ImGuiCol_Border), border_size
+        );
+        //Bottom-Left gap-up
+        window->DrawList->AddLine(
+            window->Pos + ImVec2(2.0 * border_size, window->Size.y),
+            window->Pos + ImVec2(2.0 * border_size, window->Size.y - 2.0 * border_size),
+            GetColorU32(ImGuiCol_Border), border_size
+        );
+        //Bottom-Right gap-left
+        window->DrawList->AddLine(
+            window->Pos + window->Size - ImVec2(0.0, 2.0 * border_size),
+            window->Pos + window->Size - ImVec2(2.0 * border_size, 2.0 * border_size),
+            GetColorU32(ImGuiCol_Border), border_size
+        );
+        //Bottom-Right gap-up
+        window->DrawList->AddLine(
+            window->Pos + window->Size - ImVec2(2.0 * border_size, 0.0),
+            window->Pos + window->Size - ImVec2(2.0 * border_size, 2.0 * border_size),
+            GetColorU32(ImGuiCol_Border), border_size
+        );
+    }
+    //END:NEW
 
     int border_held = window->ResizeBorderHeld;
     if (border_held != -1)
