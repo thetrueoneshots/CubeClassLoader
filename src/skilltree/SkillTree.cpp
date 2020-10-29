@@ -17,10 +17,14 @@ void SkillTree::Reset(cube::Creature* creature)
 	if (creature->gold < SKILL_TREE_RESET_COST) return;
 	creature->gold -= SKILL_TREE_RESET_COST;
  	this->stats.ResetStats();
+	this->ultimateSkills.ResetSkills();
 }
 
 // Todo: Implement
 int SkillTree::GetUsedSkillPoints()
 {
-	return 0;
+	int cnt = 0;
+	cnt += this->stats.CountSkillPoints();
+	cnt += this->ultimateSkills.CountSkillPoints();
+	return cnt;
 }

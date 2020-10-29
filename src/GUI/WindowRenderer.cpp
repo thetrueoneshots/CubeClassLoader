@@ -20,7 +20,7 @@ void WindowRenderer::SetWindow(WindowType type)
 		this->window = std::make_unique<ClassEditorWindow>(this->game, this->classVector);
 		break;
 	case WindowType::SKILL_TREE:
-		this->window = std::make_unique<SkillTreeWindow>(this->skillTree);
+		this->window = std::make_unique<SkillTreeWindow>(this->skillTree, this->game);
 		break;
 	case WindowType::MENU:
 	default:

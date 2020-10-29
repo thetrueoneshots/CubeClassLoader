@@ -82,8 +82,11 @@ class SkillTreeWindow : public Window
 {
 	bool is_open;
 	SkillTree* skillTree;
+	cube::Game* game;
+	
+	int GetAvailablePoints();
 public:
-	SkillTreeWindow(SkillTree* skillTree);
+	SkillTreeWindow(SkillTree* skillTree, cube::Game* game);
 	void Render() override;
 	bool IsOpen() override;
 };
