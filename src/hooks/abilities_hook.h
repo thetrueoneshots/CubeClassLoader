@@ -14,9 +14,18 @@ GETTER_VAR(void*, ASMCooldownOverwrite_jmpback);
 extern "C" int get_ultimate_id(cube::Creature* player) {
 	Class* classInstance = GetClassByGameId(player->entity_data.classType);
 	if (classInstance == nullptr) return 0;
+
 	int spec = player->entity_data.specialization;
 	if (spec > 1) return 0;
-	return classInstance->specializations[spec]->rAbility;
+
+	if (!classInstance->specializations[spec]->useSkillTree)
+		return classInstance->specializations[spec]->rAbility;
+
+	if (skillTree == nullptr) return 0;
+	UltimateType type = skillTree->ultimateSkills.GetSelectedSkill();
+
+	if (type == UltimateType::ULTIMATE_SKILL_TYPE_END) return 0;
+	return ULTIMATE_IDS[type];
 }
 
 
@@ -28,9 +37,12 @@ extern "C" int get_ability_cooldown(cube::Creature * creature, int abilityID) {
 	if (classType > 4 && spec < 2) {
 		Class* classInstance = GetClassByGameId(classType);
 		if (classInstance == nullptr) return cooldownMap->at(abilityID);
-		int cooldown = classInstance->specializations[spec]->cooldown;
-		if (cooldown != -1) {
-			return cooldown;
+		if (!classInstance->specializations[spec]->useSkillTree)
+		{
+			int cooldown = classInstance->specializations[spec]->cooldown;
+			if (cooldown != -1) {
+				return cooldown;
+			}
 		}
 	}
 	return cooldownMap->at(abilityID);

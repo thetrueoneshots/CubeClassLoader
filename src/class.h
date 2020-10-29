@@ -8,9 +8,6 @@ class Class
 	void Initialize() {
 		specializations.push_back(new Specialization());
 		specializations.push_back(new Specialization());
-		//skillTree = SkillTree();
-		//skillTree.AddSkill(148, 1);
-		//skillTree.AddSkill(47, 2);
 	}
 public:
 
@@ -18,12 +15,14 @@ public:
 	{
 	public:
 		std::string* name;
+		bool useSkillTree;
 		int rAbility;
 		int cooldown;
 		int shiftAbility;
 
 		Specialization() {
 			name = new std::string();
+			useSkillTree = false;
 			rAbility = 100;
 			cooldown = 5000;
 			shiftAbility = 100;
@@ -32,6 +31,7 @@ public:
 		// Todo: Rewrite to receive char*
 		Specialization(Specialization* temp, std::string* tempName) {
 			name = new std::string(tempName->begin(), tempName->end());
+			useSkillTree = temp->useSkillTree;
 			rAbility = temp->rAbility;
 			cooldown = temp->cooldown;
 			shiftAbility = temp->shiftAbility;
@@ -48,7 +48,6 @@ public:
 	std::string* name;
 	int itemClass;
 	std::vector<Specialization*> specializations;
-	//SkillTree skillTree;
 
 	Class() {
 		id = 0;

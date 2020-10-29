@@ -51,32 +51,29 @@ void ClassEditorWindow::Render()
 		ImGui::Text("Specialization 1");
 
 		ImGui::InputText("Spec 1 Name", specName1, IM_ARRAYSIZE(specName1));
-		ImGui::InputInt("Spec 1 R", &selectedClass->specializations[0]->rAbility, 1, 10);
-		ImGui::InputInt("Spec 1 CDR (in ms)", &selectedClass->specializations[0]->cooldown, 100, 1000);
-		ImGui::InputInt("Spec 1 Shift", &selectedClass->specializations[0]->shiftAbility, 1, 1);
+		ImGui::Checkbox("Use SkillTree for spec 1", &selectedClass->specializations[0]->useSkillTree);
+		if (!selectedClass->specializations[0]->useSkillTree)
+		{
+			ImGui::InputInt("Spec 1 R", &selectedClass->specializations[0]->rAbility, 1, 10);
+			ImGui::InputInt("Spec 1 CDR (in ms)", &selectedClass->specializations[0]->cooldown, 100, 1000);
+			ImGui::InputInt("Spec 1 Shift", &selectedClass->specializations[0]->shiftAbility, 1, 1);
+		}
+		
 
 		ImGui::Separator();
 		ImGui::Text("Specialization 2");
 
 		ImGui::InputText("Spec 2 name", specName2, IM_ARRAYSIZE(specName1));
-		ImGui::InputInt("Spec 2 R", &selectedClass->specializations[1]->rAbility, 1, 10);
-		ImGui::InputInt("Spec 2 CDR (in ms)", &selectedClass->specializations[1]->cooldown, 100, 1000);
-		ImGui::InputInt("Spec 2 Shift", &selectedClass->specializations[1]->shiftAbility, 1, 1);
-
-		if (ImGui::Button("Skill Tree")) {
-			//show_skill_tree = !show_skill_tree;
+		ImGui::Checkbox("Use SkillTree for spec 2", &selectedClass->specializations[1]->useSkillTree);
+		if (!selectedClass->specializations[1]->useSkillTree)
+		{
+			ImGui::InputInt("Spec 2 R", &selectedClass->specializations[1]->rAbility, 1, 10);
+			ImGui::InputInt("Spec 2 CDR (in ms)", &selectedClass->specializations[1]->cooldown, 100, 1000);
+			ImGui::InputInt("Spec 2 Shift", &selectedClass->specializations[1]->shiftAbility, 1, 10);
 		}
 
 		Update();
 	}
-	else {
-		//show_skill_tree = false;
-	}
-
-	/*
-	if (show_skill_tree) {
-		//PresentSkillTree();
-	}*/
 
 	ImGui::Separator();
 	ImGui::Separator();

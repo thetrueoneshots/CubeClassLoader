@@ -8,6 +8,7 @@ MenuWindow::MenuWindow(WindowRenderer* windowRenderer) {
 void MenuWindow::Render()
 {
 	ImGui::Begin("Menu Window", nullptr, ImVec2(150, 100), -1.0);
+	// Todo: Disable skill tree if there is no skill tree for the character
 	if (ImGui::Button("Skill Tree")) {
 		windowRenderer->SetWindow(WindowType::SKILL_TREE);
 	}
