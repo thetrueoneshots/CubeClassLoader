@@ -20,6 +20,14 @@ enum WindowType
 	CLASS_EDITOR,
 };
 
+static ImVec4 SELECTED_BUTTON_COLOR = ImVec4(0.50f, 0.0f, 0.60f, 1.00f);
+static ImVec4 SELECTED_BUTTON_COLOR_ACTIVE = ImVec4(0.70f, 0.0f, 0.80f, 1.00f);
+static ImVec4 SELECTED_BUTTON_COLOR_HOVERED = ImVec4(0.70f, 0.0f, 0.80f, 1.00f);
+
+static ImVec4 UNLOCKED_BUTTON_COLOR = ImVec4(0.40f, 0.20f, 0.50f, 1.00f);
+static ImVec4 UNLOCKED_BUTTON_COLOR_ACTIVE = ImVec4(0.60f, 0.30f, 0.60f, 1.00f);
+static ImVec4 UNLOCKED_BUTTON_COLOR_HOVERED = ImVec4(0.60f, 0.30f, 0.60f, 1.00f);
+
 class Window 
 {
 public:
@@ -85,6 +93,10 @@ class SkillTreeWindow : public Window
 	cube::Game* game;
 	
 	int GetAvailablePoints();
+	void RenderUltimateSkills();
+	void RenderShiftSkills();
+	void RenderStats();
+	void RenderPassives();
 public:
 	SkillTreeWindow(SkillTree* skillTree, cube::Game* game);
 	void Render() override;
