@@ -54,6 +54,8 @@ void WindowRenderer::Present()
 	io.Fonts->AddFontFromFileTTF("resource1.dat", 16.0f);
 	io.DisplaySize = ImVec2((float)game->width, (float)game->height);
 
+	
+
 	ImGui_ImplDX11_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
@@ -139,6 +141,7 @@ void SetImGUIColorScheme()
 	ImGui::GetStyle().Colors[ImGuiCol_TitleBgActive] = ImVec4(0.0f, 0.0f, 0.0f, 0.75f);
 	ImGui::GetStyle().Colors[ImGuiCol_TitleBg] = ImVec4(0.0f, 0.0f, 0.0f, 0.75f);
 
+	// Todo: Change button colors
 	ImGui::GetStyle().Colors[ImGuiCol_Button] = ImVec4(0.30f, 0.30f, 0.60f, 1.00f);
 	ImGui::GetStyle().Colors[ImGuiCol_FrameBg] = ImVec4(0.30f, 0.30f, 0.60f, 1.00f);
 	ImGui::GetStyle().Colors[ImGuiCol_ButtonActive] = ImVec4(0.45f, 0.35f, 0.75f, 1.00f);
@@ -149,6 +152,8 @@ void SetImGUIColorScheme()
 
 	ImGui::GetStyle().Colors[ImGuiCol_Border] = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
 	ImGui::GetStyle().Colors[ImGuiCol_BorderShadow] = ImVec4(0.0f, 0.0f, 0.0f, 1.0f);
+
+	ImGui::GetStyle().Colors[ImGuiCol_Text] = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
 
 	ImGui::GetStyle().PopupRounding = 10.0;
 	//ImGui::GetStyle().WindowRounding = 10.0;

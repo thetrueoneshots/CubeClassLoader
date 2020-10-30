@@ -28,6 +28,33 @@ static ImVec4 UNLOCKED_BUTTON_COLOR = ImVec4(0.40f, 0.20f, 0.50f, 1.00f);
 static ImVec4 UNLOCKED_BUTTON_COLOR_ACTIVE = ImVec4(0.60f, 0.30f, 0.60f, 1.00f);
 static ImVec4 UNLOCKED_BUTTON_COLOR_HOVERED = ImVec4(0.60f, 0.30f, 0.60f, 1.00f);
 
+static ID3D11ShaderResourceView* STAT_TEXTURES[StatType::STAT_TYPE_END] =
+{
+	NULL,
+};
+
+static const char* STAT_TEXTURE_FILE_NAMES[StatType::STAT_TYPE_END] =
+{
+	"armor.png",
+	"scaling_armor.png",
+	"icon_bg.png",
+	"icon_bg.png",
+	"icon_bg.png",
+	"icon_bg.png",
+	"icon_bg.png",
+	"icon_bg.png",
+	"icon_bg.png",
+	"icon_bg.png",
+	"icon_bg.png",
+	"icon_bg.png",
+	"icon_bg.png",
+	"icon_bg.png",
+	"icon_bg.png",
+	"icon_bg.png",
+	"icon_bg.png",
+	"icon_bg.png",
+};
+
 class Window 
 {
 public:
@@ -91,6 +118,9 @@ class SkillTreeWindow : public Window
 	bool is_open;
 	SkillTree* skillTree;
 	cube::Game* game;
+	int my_image_width;
+	int my_image_height;
+	ID3D11ShaderResourceView* texture;
 	
 	int GetAvailablePoints();
 	void RenderUltimateSkills();

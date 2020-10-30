@@ -630,8 +630,10 @@ bool ImGui::ButtonEx(const char* label, const ImVec2& size_arg, ImGuiButtonFlags
     // Render
     const ImU32 col = GetColorU32((held && hovered) ? ImGuiCol_ButtonActive : hovered ? ImGuiCol_ButtonHovered : ImGuiCol_Button);
     RenderNavHighlight(bb, id);
-    RenderFrame(bb.Min, bb.Max, col, true, style.FrameRounding);
+    //RenderFrame(bb.Min, bb.Max, col, true, style.FrameRounding); //OLD
+    PushStyleColor(ImGuiCol_Text, col); //NEW
     RenderTextClipped(bb.Min + style.FramePadding, bb.Max - style.FramePadding, label, NULL, &label_size, style.ButtonTextAlign, &bb);
+    PopStyleColor(); //NEW
 
     // Automatically close popups
     //if (pressed && !(flags & ImGuiButtonFlags_DontClosePopups) && (window->Flags & ImGuiWindowFlags_Popup))
@@ -931,6 +933,15 @@ void ImGui::Image(ImTextureID user_texture_id, const ImVec2& size, const ImVec2&
     }
 }
 
+// NEW
+bool ImGui::StatButton(ImTextureID user_texture_id, const ImVec2& size, const char* str, const ImVec4& tint)
+{
+    ImGuiWindow* window = GetCurrentWindow();
+    ImVec2 pos = window->DC.CursorPos + ImVec2(size) / 2.0;
+    bool var = ImageButton(user_texture_id, size, ImVec2(0,0), ImVec2(1,1), -1, ImVec4(0,0,0,0), tint);
+    window->DrawList->AddText(pos, GetColorU32(ImGuiCol_Text), str);
+    return var;
+}
 // frame_padding < 0: uses FramePadding from style (default)
 // frame_padding = 0: no framing
 // frame_padding > 0: set framing size
@@ -963,7 +974,7 @@ bool ImGui::ImageButton(ImTextureID user_texture_id, const ImVec2& size, const I
     // Render
     const ImU32 col = GetColorU32((held && hovered) ? ImGuiCol_ButtonActive : hovered ? ImGuiCol_ButtonHovered : ImGuiCol_Button);
     RenderNavHighlight(bb, id);
-    RenderFrame(bb.Min, bb.Max, col, true, ImClamp((float)ImMin(padding.x, padding.y), 0.0f, style.FrameRounding));
+    //RenderFrame(bb.Min, bb.Max, col, true, ImClamp((float)ImMin(padding.x, padding.y), 0.0f, style.FrameRounding)); //OLD
     if (bg_col.w > 0.0f)
         window->DrawList->AddRectFilled(image_bb.Min, image_bb.Max, GetColorU32(bg_col));
     window->DrawList->AddImage(user_texture_id, image_bb.Min, image_bb.Max, uv0, uv1, GetColorU32(tint_col));
